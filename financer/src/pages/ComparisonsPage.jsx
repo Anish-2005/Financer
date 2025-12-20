@@ -11,6 +11,20 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import {
+  BarChart3,
+  TrendingUp,
+  TrendingDown,
+  Search,
+  Filter,
+  ArrowUpDown,
+  Eye,
+  ArrowRight,
+  X
+} from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
+import AnimatedBackground from "../components/AnimatedBackground";
+import Footer from "../components/Footer";
 
 ChartJS.register(
   CategoryScale,
@@ -23,6 +37,7 @@ ChartJS.register(
 );
 
 const ComparisonsPage = () => {
+  const { isDark } = useTheme();
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -112,97 +127,381 @@ const ComparisonsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-emerald-900">
-      <motion.header 
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="w-full bg-gray-800/50 backdrop-blur-md py-8 text-center shadow-xl border-b border-gray-700"
-      >
-        <h1 className="mt-16 text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-          Stock Comparison
-        </h1>
-        <p className="mt-2 text-lg text-gray-300">Analyze and compare stock performance</p>
-      </motion.header>
+    <div className={`min-h-screen transition-colors duration-300 relative overflow-hidden ${
+      isDark
+        ? 'bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900'
+        : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+    }`}>
+      <AnimatedBackground />
 
-      <div className="container mx-auto max-w-6xl p-4 mt-8 space-y-8">
-        {/* Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-  <motion.div 
-    whileHover={{ scale: 1.02 }}
-    className="bg-gray-800/50 backdrop-blur-lg p-4 rounded-xl border border-gray-700"
-  >
-    <label className="text-gray-300 text-sm">Sort By</label>
-    <select
-      value={sortBy}
-      onChange={(e) => handleSortChange(e.target.value)}
-      className="w-full mt-2 p-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-300
-                focus:ring-2 focus:ring-emerald-400 focus:ring-opacity-50 focus:border-emerald-400
-                appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjOWNhM2FmIj48cGF0aCBkPSJNNyAxMGw1IDUgNS01eiIvPjwvc3ZnPg==')] 
-                bg-no-repeat bg-[length:20px_20px] bg-[center_right_1rem]"
-    >
-      <option value="price" className="bg-gray-800 text-gray-300">Price</option>
-      <option value="change" className="bg-gray-800 text-gray-300">Daily Change</option>
-    </select>
-  </motion.div>
-
-  <motion.div 
-    whileHover={{ scale: 1.02 }}
-    className="bg-gray-800/50 backdrop-blur-lg p-4 rounded-xl border border-gray-700"
-  >
-    <label className="text-gray-300 text-sm">Order</label>
-    <select
-      value={sortOrder}
-      onChange={(e) => setSortOrder(e.target.value)}
-      className="w-full mt-2 p-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-300
-                focus:ring-2 focus:ring-emerald-400 focus:ring-opacity-50 focus:border-emerald-400
-                appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjOWNhM2FmIj48cGF0aCBkPSJNNyAxMGw1IDUgNS01eiIvPjwvc3ZnPg==')] 
-                bg-no-repeat bg-[length:20px_20px] bg-[center_right_1rem]"
-    >
-      <option value="desc" className="bg-gray-800 text-gray-300">High</option>
-      <option value="asc" className="bg-gray-800 text-gray-300">Low</option>
-    </select>
-  </motion.div>
-
-  <motion.div 
-    whileHover={{ scale: 1.02 }}
-    className="bg-gray-800/50 backdrop-blur-lg p-4 rounded-xl border border-gray-700"
-  >
-    <label className="text-gray-300 text-sm">Items Per Page</label>
-    <select
-      value={itemsPerPage}
-      onChange={(e) => {
-        setItemsPerPage(Number(e.target.value));
-        setPageNumber(1);
-      }}
-      className="w-full mt-2 p-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-300
-                focus:ring-2 focus:ring-emerald-400 focus:ring-opacity-50 focus:border-emerald-400
-                appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSIjOWNhM2FmIj48cGF0aCBkPSJNNyAxMGw1IDUgNS01eiIvPjwvc3ZnPg==')] 
-                bg-no-repeat bg-[length:20px_20px] bg-[center_right_1rem]"
-    >
-      <option value={10} className="bg-gray-800 text-gray-300">10 Stocks</option>
-      <option value={20} className="bg-gray-800 text-gray-300">20 Stocks</option>
-    </select>
-  </motion.div>
-
-          <motion.div 
-            whileHover={{ scale: 1.02 }}
-            className="bg-gray-800/50 backdrop-blur-lg p-4 rounded-xl border border-gray-700"
+      {/* Hero Section */}
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 pt-32 pb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center space-y-8"
+        >
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm transition-colors ${
+              isDark
+                ? 'bg-slate-800/50 border border-emerald-500/20'
+                : 'bg-white/50 border border-emerald-500/30'
+            }`}
           >
-            <div className="flex justify-between items-center h-full">
-              <div>
-                <p className="text-gray-300 text-sm">Current Page</p>
-                <p className="text-2xl font-bold text-purple-400 mt-1">
-                  {pageNumber} / {totalPages}
-                </p>
-              </div>
-              <div className="text-3xl">📄</div>
-            </div>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-sm text-emerald-400 font-medium">Market Analysis</span>
           </motion.div>
-        </div>
 
-        {/* Loading and Error States */}
-        {loading && (
-          <div className="text-center text-gray-300">
+          {/* Main Heading */}
+          <div className="space-y-6">
+            <h2 className={`text-6xl md:text-7xl font-bold leading-tight transition-colors ${
+              isDark
+                ? 'bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent'
+                : 'bg-gradient-to-r from-slate-900 via-blue-900 to-emerald-900 bg-clip-text text-transparent'
+            }`}>
+              Compare & Analyze
+              <br />
+              <span className="bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+                Stock Performance
+              </span>
+            </h2>
+            <p className={`text-xl max-w-3xl mx-auto leading-relaxed transition-colors ${
+              isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}>
+              Make informed investment decisions with comprehensive stock analysis, real-time data,
+              and advanced comparison tools to identify the best opportunities in the market.
+            </p>
+          </div>
+
+          {/* Stats Row */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12 max-w-4xl mx-auto"
+          >
+            {[
+              { value: stocks.length, label: "Stocks Tracked" },
+              { value: stocks.filter(s => s.pChange && s.pChange.startsWith('+')).length, label: "Gainers" },
+              { value: stocks.filter(s => s.pChange && !s.pChange.startsWith('+') && s.pChange !== 'N/A').length, label: "Losers" },
+              { value: "Real-time", label: "Updates" }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ y: -5 }}
+                className={`backdrop-blur-sm rounded-xl p-6 transition-colors ${
+                  isDark
+                    ? 'bg-slate-800/30 border border-slate-700/50'
+                    : 'bg-white/30 border border-slate-200/50'
+                }`}
+              >
+                <div className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
+                  {stat.value}
+                </div>
+                <div className={`text-sm mt-1 transition-colors ${
+                  isDark ? 'text-slate-400' : 'text-slate-600'
+                }`}>{stat.label}</div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Controls Section */}
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={`backdrop-blur-xl rounded-3xl p-8 transition-colors ${
+            isDark
+              ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50'
+              : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
+          }`}
+        >
+          <div className="text-center mb-8">
+            <div className="inline-flex px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-4">
+              <span className="text-emerald-400 font-semibold text-sm">Filter & Sort</span>
+            </div>
+            <h3 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>
+              Customize Your
+              <br />
+              <span className="bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
+                Analysis View
+              </span>
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="space-y-2">
+              <label className={`text-sm font-medium transition-colors ${
+                isDark ? 'text-slate-300' : 'text-slate-700'
+              }`}>Sort By</label>
+              <div className="relative">
+                <BarChart3 className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
+                  isDark ? 'text-slate-400' : 'text-slate-500'
+                }`} />
+                <select
+                  value={sortBy}
+                  onChange={(e) => handleSortChange(e.target.value)}
+                  className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                    isDark
+                      ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
+                      : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
+                  } focus:ring-2 focus:ring-emerald-400/20`}
+                >
+                  <option value="price">Price</option>
+                  <option value="change">Daily Change</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className={`text-sm font-medium transition-colors ${
+                isDark ? 'text-slate-300' : 'text-slate-700'
+              }`}>Order</label>
+              <div className="relative">
+                <ArrowUpDown className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
+                  isDark ? 'text-slate-400' : 'text-slate-500'
+                }`} />
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}
+                  className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                    isDark
+                      ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
+                      : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
+                  } focus:ring-2 focus:ring-emerald-400/20`}
+                >
+                  <option value="desc">High to Low</option>
+                  <option value="asc">Low to High</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className={`text-sm font-medium transition-colors ${
+                isDark ? 'text-slate-300' : 'text-slate-700'
+              }`}>Items per Page</label>
+              <div className="relative">
+                <Filter className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
+                  isDark ? 'text-slate-400' : 'text-slate-500'
+                }`} />
+                <select
+                  value={itemsPerPage}
+                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                  className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                    isDark
+                      ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
+                      : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
+                  } focus:ring-2 focus:ring-emerald-400/20`}
+                >
+                  <option value={10}>10 per page</option>
+                  <option value={25}>25 per page</option>
+                  <option value={50}>50 per page</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className={`text-sm font-medium transition-colors ${
+                isDark ? 'text-slate-300' : 'text-slate-700'
+              }`}>Page</label>
+              <div className="flex items-center gap-2">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
+                  disabled={pageNumber === 1}
+                  className={`p-3 rounded-xl border transition-all ${
+                    isDark
+                      ? 'bg-slate-800/50 border-slate-600 text-white disabled:opacity-50'
+                      : 'bg-white/50 border-slate-300 text-slate-900 disabled:opacity-50'
+                  }`}
+                >
+                  ‹
+                </motion.button>
+                <span className={`flex-1 text-center py-3 transition-colors ${
+                  isDark ? 'text-white' : 'text-slate-900'
+                }`}>
+                  {pageNumber} / {totalPages}
+                </span>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setPageNumber(Math.min(totalPages, pageNumber + 1))}
+                  disabled={pageNumber === totalPages}
+                  className={`p-3 rounded-xl border transition-all ${
+                    isDark
+                      ? 'bg-slate-800/50 border-slate-600 text-white disabled:opacity-50'
+                      : 'bg-white/50 border-slate-300 text-slate-900 disabled:opacity-50'
+                  }`}
+                >
+                  ›
+                </motion.button>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      {/* Stock Grid Section */}
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className={`backdrop-blur-xl rounded-3xl p-8 transition-colors ${
+            isDark
+              ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50'
+              : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
+          }`}
+        >
+          <div className="text-center mb-8">
+            <div className="inline-flex px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
+              <span className="text-blue-400 font-semibold text-sm">Market Analysis</span>
+            </div>
+            <h3 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>
+              Stock
+              <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                Comparison Grid
+              </span>
+            </h3>
+            <p className={`text-lg transition-colors ${
+              isDark ? 'text-slate-300' : 'text-slate-600'
+            }`}>
+              Compare stocks side by side with real-time data and analytics
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {currentStocks.map((stock, index) => (
+              <motion.div
+                key={stock.symbol}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.02, y: -5 }}
+                className={`backdrop-blur-xl rounded-2xl p-6 transition-all cursor-pointer ${
+                  isDark
+                    ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 hover:border-emerald-400/50'
+                    : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50 hover:border-emerald-500/50'
+                }`}
+                onClick={() => handleStockClick(stock)}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
+                      stock.change >= 0
+                        ? 'bg-emerald-500/20 text-emerald-400'
+                        : 'bg-red-500/20 text-red-400'
+                    }`}>
+                      <TrendingUp className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h4 className={`font-bold text-lg transition-colors ${
+                        isDark ? 'text-white' : 'text-slate-900'
+                      }`}>
+                        {stock.symbol}
+                      </h4>
+                      <p className={`text-sm transition-colors ${
+                        isDark ? 'text-slate-400' : 'text-slate-500'
+                      }`}>
+                        {stock.name}
+                      </p>
+                    </div>
+                  </div>
+                  <div className={`text-right transition-colors ${
+                    stock.change >= 0 ? 'text-emerald-400' : 'text-red-400'
+                  }`}>
+                    <div className="font-bold text-lg">
+                      ₹{stock.price.toLocaleString()}
+                    </div>
+                    <div className="text-sm">
+                      {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className={`text-sm transition-colors ${
+                      isDark ? 'text-slate-400' : 'text-slate-500'
+                    }`}>Volume</span>
+                    <span className={`font-medium transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>
+                      {(stock.volume / 1000000).toFixed(1)}M
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-sm transition-colors ${
+                      isDark ? 'text-slate-400' : 'text-slate-500'
+                    }`}>Market Cap</span>
+                    <span className={`font-medium transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>
+                      ₹{(stock.marketCap / 1000000000).toFixed(1)}B
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className={`text-sm transition-colors ${
+                      isDark ? 'text-slate-400' : 'text-slate-500'
+                    }`}>P/E Ratio</span>
+                    <span className={`font-medium transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>
+                      {stock.peRatio?.toFixed(1) || 'N/A'}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-4 border-t border-slate-700/50">
+                  <div className="flex items-center justify-between">
+                    <span className={`text-sm transition-colors ${
+                      isDark ? 'text-slate-400' : 'text-slate-500'
+                    }`}>52W High</span>
+                    <span className={`font-medium transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>
+                      ₹{stock.high52Week.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {currentStocks.length === 0 && (
+            <div className="text-center py-12">
+              <BarChart3 className={`w-16 h-16 mx-auto mb-4 transition-colors ${
+                isDark ? 'text-slate-600' : 'text-slate-400'
+              }`} />
+              <h4 className={`text-xl font-semibold mb-2 transition-colors ${
+                isDark ? 'text-white' : 'text-slate-900'
+              }`}>
+                No stocks found
+              </h4>
+              <p className={`transition-colors ${
+                isDark ? 'text-slate-400' : 'text-slate-500'
+              }`}>
+                Try adjusting your filters or search criteria
+              </p>
+            </div>
+          )}
+        </motion.div>
+      </div>
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 1, repeat: Infinity }}
