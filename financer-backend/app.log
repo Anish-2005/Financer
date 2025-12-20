@@ -256,3 +256,21 @@
 2025-12-21 00:12:26,711 - main - WARNING - Google API key not found
 2025-12-21 00:12:26,711 - database - INFO - Connected to in-memory database
 2025-12-21 00:12:26,711 - main - INFO - All services initialized successfully
+2025-12-21 00:12:41,322 - main - INFO - Fetching fresh stock data from NSE
+2025-12-21 00:12:43,548 - main - INFO - Serving cached stock data
+2025-12-21 00:13:43,284 - main - INFO - Shutting down Financer API...
+2025-12-21 00:13:43,284 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:13:43,284 - main - INFO - Shutdown complete
+2025-12-21 00:13:45,858 - main - INFO - Starting Financer API...
+2025-12-21 00:13:45,859 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:13:45,859 - main - WARNING - Google API key not found
+2025-12-21 00:13:45,859 - database - INFO - Connected to in-memory database
+2025-12-21 00:13:45,859 - main - INFO - All services initialized successfully
+2025-12-21 00:14:24,586 - main - INFO - Serving cached stock data
+2025-12-21 00:14:24,605 - main - INFO - Serving cached stock data
+2025-12-21 00:14:24,786 - main - INFO - Shutting down Financer API...
+2025-12-21 00:14:24,788 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:14:24,788 - main - INFO - Shutdown complete
+2025-12-21 00:15:04,002 - main - INFO - Shutting down Financer API...
+2025-12-21 00:15:04,002 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:15:04,002 - main - INFO - Shutdown complete

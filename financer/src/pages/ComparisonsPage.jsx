@@ -51,11 +51,14 @@ const ComparisonsPage = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [viewMode, setViewMode] = useState("grid"); // "grid" or "table"
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     const fetchStocks = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/stocks");
+        setLoading(true);
+        const skip = (pageNumber - 1) * itemsPerPage;
+        const response = await fetch(`http://127.0.0.1:8000/stocks?skip=${skip}&limit=${itemsPerPage}`);
         const text = await response.text();
         
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -71,21 +74,22 @@ const ComparisonsPage = () => {
           .filter(stock => stock?.symbol)
           .map(stock => ({
             symbol: stock.symbol,
-            name: stock.meta?.companyName || stock.symbol,
-            price: stock.lastPrice ? parseFloat(stock.lastPrice) : 0,
+            name: stock.name || stock.symbol,
+            price: stock.lastPrice ? parseFloat(stock.lastPrice.replace(/,/g, '')) : 0,
             change: stock.pChange ? parseFloat(stock.pChange) : 0,
             rawPrice: stock.lastPrice,
             rawChange: stock.pChange,
             historical: stock.historical || [],
             otherDetails: {
-              open: stock.open,
-              high: stock.high,
-              low: stock.low,
-              volume: stock.volume
+              open: stock.otherDetails?.open,
+              high: stock.otherDetails?.high,
+              low: stock.otherDetails?.low,
+              volume: stock.otherDetails?.volume
             },
           }));
 
         setStocks(formattedStocks);
+        setTotalCount(result.total_count || 0);
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -96,7 +100,7 @@ const ComparisonsPage = () => {
     };
 
     fetchStocks();
-  }, []);
+  }, [pageNumber, itemsPerPage]);
 
   const getChartData = (historical) => ({
     labels: ['4D', '3D', '2D', '1D', 'Today'],
@@ -116,11 +120,8 @@ const ComparisonsPage = () => {
     return sortOrder === "desc" ? b.change - a.change : a.change - b.change;
   });
 
-  const totalPages = Math.ceil(sortedStocks.length / itemsPerPage);
-  const paginatedStocks = sortedStocks.slice(
-    (pageNumber - 1) * itemsPerPage,
-    pageNumber * itemsPerPage
-  );
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const paginatedStocks = sortedStocks; // Already paginated from server
 
   const handleSortChange = (newSortBy) => {
     if (sortBy === newSortBy) {
@@ -194,9 +195,9 @@ const ComparisonsPage = () => {
             className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12 max-w-4xl mx-auto"
           >
             {[
-              { value: stocks.length, label: "Stocks Tracked" },
-              { value: stocks.filter(s => s.pChange && s.pChange.startsWith('+')).length, label: "Gainers" },
-              { value: stocks.filter(s => s.pChange && !s.pChange.startsWith('+') && s.pChange !== 'N/A').length, label: "Losers" },
+              { value: totalCount || stocks.length, label: "Stocks Tracked" },
+              { value: stocks.filter(s => s.change > 0).length, label: "Gainers (Page)" },
+              { value: stocks.filter(s => s.change < 0).length, label: "Losers (Page)" },
               { value: "Real-time", label: "Updates" }
             ].map((stat, index) => (
               <motion.div
@@ -308,7 +309,10 @@ const ComparisonsPage = () => {
               }`} />
               <select
                 value={itemsPerPage}
-                onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setPageNumber(1);
+                }}
                 className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
                   isDark
                     ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'

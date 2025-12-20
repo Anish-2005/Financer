@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-const StockHero = ({ isDark, stocks }) => {
+const StockHero = ({ isDark, stocks, totalCount }) => {
   return (
     <div className="relative z-10 container mx-auto max-w-7xl px-4 pt-32 pb-16">
       <motion.div
@@ -56,7 +56,7 @@ const StockHero = ({ isDark, stocks }) => {
           className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12 max-w-4xl mx-auto"
         >
           {[
-            { value: stocks.length, label: "Listed Stocks" },
+            { value: totalCount ? `${stocks.length} / ${totalCount}` : stocks.length, label: "Listed Stocks" },
             { value: stocks[0]?.symbol || 'N/A', label: "Most Active" },
             { value: stocks.reduce((sum, stock) => sum + (stock.otherDetails.volume || 0), 0).toLocaleString(), label: "Total Volume" },
             { value: "24/7", label: "Market Hours" }

@@ -16,53 +16,91 @@ const StocksPage = () => {
   const { isDark } = useTheme();
   const [stocks, setStocks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   const [selectedStock, setSelectedStock] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [hasMore, setHasMore] = useState(true);
+  const [totalCount, setTotalCount] = useState(0);
+  const [skip, setSkip] = useState(0);
+  const LIMIT = 20;
+
+  const fetchStocks = async (currentSkip, isLoadMore = false) => {
+    try {
+      if (isLoadMore) setLoadingMore(true);
+      
+      const response = await fetch(`http://127.0.0.1:8000/stocks?skip=${currentSkip}&limit=${LIMIT}`);
+      const text = await response.text();
+      
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+      if (!text) throw new Error("Empty response from server");
+
+      const result = JSON.parse(text);
+      if (result.error) throw new Error(result.error);
+      if (!result.data || !Array.isArray(result.data)) {
+        throw new Error("Invalid data structure received from server");
+      }
+
+      const formattedStocks = result.data
+        .filter(stock => stock?.symbol)
+        .map(stock => ({
+          symbol: stock.symbol,
+          name: stock.name || stock.symbol,
+          lastPrice: stock.lastPrice ? `₹${parseFloat(stock.lastPrice.replace(/,/g, '')).toFixed(2)}` : "N/A",
+          pChange: stock.pChange ? `${parseFloat(stock.pChange) >= 0 ? "+" : ""}${parseFloat(stock.pChange).toFixed(2)}%` : "N/A",
+          chartToday: stock.chartTodayPath,
+          otherDetails: {
+            open: stock.otherDetails?.open,
+            high: stock.otherDetails?.high,
+            low: stock.otherDetails?.low,
+            volume: stock.otherDetails?.volume
+          }
+        }));
+
+      if (isLoadMore) {
+        setStocks(prev => [...prev, ...formattedStocks]);
+      } else {
+        setStocks(formattedStocks);
+      }
+      
+      setHasMore(result.has_more);
+      setTotalCount(result.total_count);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      console.error("Stock Fetch Error:", err);
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchStocks = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8000/stocks");
-        const text = await response.text();
-        
-        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-        if (!text) throw new Error("Empty response from server");
+    fetchStocks(0);
+  }, []);
 
-        const result = JSON.parse(text);
-        if (result.error) throw new Error(result.error);
-        if (!result.data || !Array.isArray(result.data)) {
-          throw new Error("Invalid data structure received from server");
-        }
+  useEffect(() => {
+    if (skip > 0) {
+      fetchStocks(skip, true);
+    }
+  }, [skip]);
 
-        const formattedStocks = result.data
-          .filter(stock => stock?.symbol)
-          .map(stock => ({
-            symbol: stock.symbol,
-            name: stock.meta?.companyName || stock.symbol,
-            lastPrice: stock.lastPrice ? `₹${parseFloat(stock.lastPrice).toFixed(2)}` : "N/A",
-            pChange: stock.pChange ? `${stock.pChange >= 0 ? "+" : ""}${parseFloat(stock.pChange).toFixed(2)}%` : "N/A",
-            chartToday: stock.chartTodayPath,
-            otherDetails: {
-              open: stock.open,
-              high: stock.high,
-              low: stock.low,
-              volume: stock.volume
-            }
-          }));
-
-        setStocks(formattedStocks);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-        console.error("Stock Fetch Error:", err);
-      } finally {
-        setLoading(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 100 &&
+        !loading &&
+        !loadingMore &&
+        hasMore &&
+        !searchTerm // Disable infinite scroll when searching
+      ) {
+        setSkip(prev => prev + LIMIT);
       }
     };
 
-    fetchStocks();
-  }, []);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading, loadingMore, hasMore, searchTerm]);
 
   return (
     <div className={`min-h-screen transition-colors duration-300 relative overflow-hidden ${
@@ -72,7 +110,7 @@ const StocksPage = () => {
     }`}>
       <AnimatedBackground />
 
-      <StockHero isDark={isDark} stocks={stocks} />
+      <StockHero isDark={isDark} stocks={stocks} totalCount={totalCount} />
 
       {loading && <LoadingState isDark={isDark} />}
 
@@ -110,6 +148,12 @@ const StocksPage = () => {
             isDark={isDark}
             onStockClick={setSelectedStock}
           />
+          
+          {loadingMore && (
+            <div className="flex justify-center py-8">
+              <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${isDark ? 'border-white' : 'border-slate-900'}`}></div>
+            </div>
+          )}
         </div>
       )}
 

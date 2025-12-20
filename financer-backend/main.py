@@ -438,35 +438,48 @@ async def get_mock_stock_data() -> Dict[str, Any]:
     }
 
 @app.get("/stocks", response_model=Dict[str, Any])
-@limiter.limit("30/minute")
-async def get_stocks(request: Request, background_tasks: BackgroundTasks):
-    """Get NSE stock data with caching - fallback to mock data"""
+@limiter.limit("60/minute")
+async def get_stocks(
+    request: Request, 
+    background_tasks: BackgroundTasks,
+    skip: int = 0,
+    limit: int = 20
+):
+    """Get NSE stock data with caching and pagination"""
     try:
         # Check cache first
-        cache_key = "nse_stocks_data"
+        cache_key = f"nse_stocks_data_{skip}_{limit}"
         cached_data = await cache_service.get(cache_key)
 
         if cached_data:
-            logger.info("Serving cached stock data")
+            logger.info(f"Serving cached stock data for skip={skip} limit={limit}")
             return cached_data
 
         # Try to fetch fresh data
-        logger.info("Fetching fresh stock data from NSE")
-        result = await nse_service.get_stock_data()
+        logger.info(f"Fetching fresh stock data from NSE for skip={skip} limit={limit}")
+        result = await nse_service.get_stock_data(skip=skip, limit=limit)
 
         if result["error"]:
-            # Return mock data if NSE fails
-            logger.warning(f"NSE API error: {result['error']}, serving mock data")
-            mock_data = await get_mock_stock_data()
-            # Cache mock data for shorter time
-            await cache_service.set(cache_key, mock_data, ttl=60)  # 1 minute
-            return mock_data
+            # Return mock data if NSE fails (only for first page maybe?)
+            if skip == 0:
+                logger.warning(f"NSE API error: {result['error']}, serving mock data")
+                mock_data = await get_mock_stock_data()
+                # Cache mock data for shorter time
+                await cache_service.set(cache_key, mock_data, ttl=60)  # 1 minute
+                return mock_data
+            else:
+                return result
 
         # Cache the result
         await cache_service.set(cache_key, result, ttl=300)  # 5 minutes
 
-        # Background task to update cache
-        background_tasks.add_task(cache_service.set, cache_key, result, 300)
+        return result
+
+    except Exception as e:
+        logger.error(f"Error in get_stocks: {str(e)}")
+        if skip == 0:
+            return await get_mock_stock_data()
+        raise HTTPException(status_code=500, detail=str(e))
 
         return result
 

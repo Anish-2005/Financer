@@ -13,6 +13,9 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from fake_useragent import UserAgent
+import nselib
+from nselib import capital_market
+import pandas as pd
 
 logger = logging.getLogger(__name__)
 
@@ -24,8 +27,11 @@ class NSEDataService:
 
     def __init__(self):
         self.ua = UserAgent()
-        # List of NIFTY 50 stocks + some popular ones
-        self.tickers = [
+        self.tickers, self.company_names = self._get_all_nse_tickers()
+
+    def _get_all_nse_tickers(self) -> tuple[List[str], Dict[str, str]]:
+        """Fetch all NSE equity tickers dynamically"""
+        default_tickers = [
             "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "ICICIBANK.NS", "INFY.NS",
             "HINDUNILVR.NS", "ITC.NS", "SBIN.NS", "BHARTIARTL.NS", "KOTAKBANK.NS",
             "LT.NS", "AXISBANK.NS", "ASIANPAINT.NS", "MARUTI.NS", "TITAN.NS",
@@ -37,65 +43,132 @@ class NSEDataService:
             "NESTLEIND.NS", "SBILIFE.NS", "TATACONSUM.NS", "TATASTEEL.NS", "TECHM.NS",
             "UPL.NS", "WIPRO.NS", "APOLLOHOSP.NS", "BAJAJ-AUTO.NS"
         ]
-
-    async def get_stock_data(self) -> Dict[str, Any]:
-        """Get NSE stock market data using yfinance"""
+        default_mapping = {t.replace(".NS", ""): t.replace(".NS", "") for t in default_tickers}
+        
         try:
-            # Fetch data for all tickers in one go
-            tickers_str = " ".join(self.tickers)
-            data = yf.download(tickers_str, period="1d", group_by='ticker', threads=True)
+            logger.info("Fetching full NSE equity list...")
+            df = capital_market.equity_list()
             
+            # Clean column names (remove leading/trailing spaces)
+            df.columns = df.columns.str.strip()
+            
+            # Filter for Equity series
+            if 'SERIES' in df.columns:
+                eq_df = df[df['SERIES'] == 'EQ']
+                symbols = eq_df['SYMBOL'].tolist()
+                names = eq_df['NAME OF COMPANY'].tolist()
+                
+                # Create mapping
+                mapping = dict(zip(symbols, names))
+                
+                # Append .NS for yfinance
+                ns_tickers = [f"{sym}.NS" for sym in symbols]
+                logger.info(f"Successfully fetched {len(ns_tickers)} tickers from NSE.")
+                return ns_tickers, mapping
+            else:
+                logger.warning("'SERIES' column not found in NSE data. Using default list.")
+                return default_tickers, default_mapping
+                
+        except Exception as e:
+            logger.error(f"Failed to fetch NSE ticker list: {e}. Using default list.")
+            return default_tickers, default_mapping
+
+    async def get_stock_data(self, skip: int = 0, limit: int = 20) -> Dict[str, Any]:
+        """Get NSE stock market data using yfinance with batching and pagination"""
+        try:
             processed_data = []
             
-            for ticker in self.tickers:
-                try:
-                    # Handle single ticker vs multiple ticker response structure
-                    if len(self.tickers) == 1:
-                        stock_data = data
-                    else:
-                        stock_data = data[ticker]
-                    
-                    if stock_data.empty:
-                        continue
+            # Calculate target tickers based on pagination
+            total_tickers = len(self.tickers)
+            end_index = min(skip + limit, total_tickers)
+            target_tickers = self.tickers[skip:end_index]
+            
+            if not target_tickers:
+                 return {
+                    "data": [],
+                    "error": None,
+                    "timestamp": datetime.utcnow().isoformat(),
+                    "total_count": total_tickers,
+                    "has_more": False
+                }
 
-                    # Get latest row
-                    latest = stock_data.iloc[-1]
-                    prev_close = stock_data.iloc[0]['Open'] # Approximation for 1d period
+            chunk_size = 100 # Fetch 100 at a time to be safe (though limit might be smaller)
+            
+            loop = asyncio.get_event_loop()
+            
+            # Process target tickers in chunks
+            for i in range(0, len(target_tickers), chunk_size):
+                chunk = target_tickers[i:i + chunk_size]
+                tickers_str = " ".join(chunk)
+                
+                try:
+                    # Run yfinance download in a separate thread
+                    data = await loop.run_in_executor(None, lambda: yf.download(tickers_str, period="1d", group_by='ticker', threads=True, progress=False))
                     
-                    # Calculate change
-                    current_price = float(latest['Close'])
-                    open_price = float(latest['Open'])
-                    change = current_price - open_price
-                    p_change = (change / open_price) * 100 if open_price else 0
-                    
-                    symbol = ticker.replace(".NS", "")
-                    
-                    processed_stock = {
-                        "symbol": symbol,
-                        "name": symbol, # yfinance doesn't give name easily in bulk download
-                        "lastPrice": f"{current_price:,.2f}",
-                        "pChange": f"{p_change:+.2f}",
-                        "change": change,
-                        "change_percent": p_change,
-                        "otherDetails": {
-                            "open": float(latest['Open']),
-                            "high": float(latest['High']),
-                            "low": float(latest['Low']),
-                            "volume": int(latest['Volume']),
-                            "chartToday": None
-                        }
-                    }
-                    processed_data.append(processed_stock)
-                    
+                    if data.empty:
+                        continue
+                        
+                    for ticker in chunk:
+                        try:
+                            # Handle single ticker vs multiple ticker response structure
+                            if len(chunk) == 1:
+                                stock_data = data
+                            else:
+                                try:
+                                    stock_data = data[ticker]
+                                except KeyError:
+                                    continue
+                            
+                            if stock_data.empty:
+                                continue
+
+                            # Get latest row
+                            latest = stock_data.iloc[-1]
+                            
+                            # Check for NaN values which indicate missing data
+                            if pd.isna(latest['Close']):
+                                continue
+
+                            # Calculate change
+                            current_price = float(latest['Close'])
+                            open_price = float(latest['Open'])
+                            change = current_price - open_price
+                            p_change = (change / open_price) * 100 if open_price else 0
+                            
+                            symbol = ticker.replace(".NS", "")
+                            name = self.company_names.get(symbol, symbol)
+                            
+                            processed_stock = {
+                                "symbol": symbol,
+                                "name": name,
+                                "lastPrice": f"{current_price:,.2f}",
+                                "pChange": f"{p_change:+.2f}",
+                                "change": change,
+                                "change_percent": p_change,
+                                "otherDetails": {
+                                    "open": float(latest['Open']),
+                                    "high": float(latest['High']),
+                                    "low": float(latest['Low']),
+                                    "volume": int(latest['Volume']) if not pd.isna(latest['Volume']) else 0,
+                                    "chartToday": None
+                                }
+                            }
+                            processed_data.append(processed_stock)
+                            
+                        except Exception as e:
+                            # logger.warning(f"Error processing {ticker}: {e}")
+                            continue
+                            
                 except Exception as e:
-                    logger.warning(f"Error processing {ticker}: {e}")
+                    logger.error(f"Error fetching chunk {i}: {e}")
                     continue
 
             return {
                 "data": processed_data,
                 "error": None,
                 "timestamp": datetime.utcnow().isoformat(),
-                "total_count": len(processed_data)
+                "total_count": total_tickers,
+                "has_more": end_index < total_tickers
             }
 
         except Exception as e:
