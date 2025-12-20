@@ -1,0 +1,1 @@
+2025-12-20 23:33:18,344 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
