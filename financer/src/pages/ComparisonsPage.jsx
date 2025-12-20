@@ -20,7 +20,11 @@ import {
   ArrowUpDown,
   Eye,
   ArrowRight,
-  X
+  Activity,
+  X,
+  Star,
+  Grid3X3,
+  List
 } from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import AnimatedBackground from "../components/AnimatedBackground";
@@ -46,6 +50,7 @@ const ComparisonsPage = () => {
   const [sortOrder, setSortOrder] = useState("desc");
   const [pageNumber, setPageNumber] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [viewMode, setViewMode] = useState("grid"); // "grid" or "table"
 
   useEffect(() => {
     const fetchStocks = async () => {
@@ -217,141 +222,185 @@ const ComparisonsPage = () => {
 
       {/* Controls Section */}
       <div className="relative z-10 container mx-auto max-w-7xl px-4 py-20">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className={`backdrop-blur-xl rounded-3xl p-8 transition-colors ${
-            isDark
-              ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50'
-              : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
-          }`}
-        >
-          <div className="text-center mb-8">
-            <div className="inline-flex px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-4">
-              <span className="text-emerald-400 font-semibold text-sm">Filter & Sort</span>
+        <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-6"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-emerald-400 font-semibold text-sm">Filter & Sort</span>
+          </motion.div>
+          <h3 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors ${
+            isDark ? 'text-white' : 'text-slate-900'
+          }`}>
+            Customize Your
+            <br />
+            <span className="bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
+              Analysis View
+            </span>
+          </h3>
+          <p className={`text-xl max-w-2xl mx-auto transition-colors ${
+            isDark ? 'text-slate-400' : 'text-slate-600'
+          }`}>
+            Sort and filter stocks to focus on the data that matters most to your investment strategy
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 max-w-6xl mx-auto">
+          <div className="space-y-2">
+            <label className={`text-sm font-medium transition-colors ${
+              isDark ? 'text-slate-300' : 'text-slate-700'
+            }`}>Sort By</label>
+            <div className="relative">
+              <BarChart3 className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
+                isDark ? 'text-slate-400' : 'text-slate-500'
+              }`} />
+              <select
+                value={sortBy}
+                onChange={(e) => handleSortChange(e.target.value)}
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                  isDark
+                    ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
+                    : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
+                } focus:ring-2 focus:ring-emerald-400/20`}
+              >
+                <option value="price">Price</option>
+                <option value="change">Daily Change</option>
+              </select>
             </div>
-            <h3 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors ${
-              isDark ? 'text-white' : 'text-slate-900'
-            }`}>
-              Customize Your
-              <br />
-              <span className="bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
-                Analysis View
+          </div>
+
+          <div className="space-y-2">
+            <label className={`text-sm font-medium transition-colors ${
+              isDark ? 'text-slate-300' : 'text-slate-700'
+            }`}>Order</label>
+            <div className="relative">
+              <ArrowUpDown className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
+                isDark ? 'text-slate-400' : 'text-slate-500'
+              }`} />
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                  isDark
+                    ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
+                    : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
+                } focus:ring-2 focus:ring-emerald-400/20`}
+              >
+                <option value="desc">High to Low</option>
+                <option value="asc">Low to High</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className={`text-sm font-medium transition-colors ${
+              isDark ? 'text-slate-300' : 'text-slate-700'
+            }`}>Items per Page</label>
+            <div className="relative">
+              <Filter className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
+                isDark ? 'text-slate-400' : 'text-slate-500'
+              }`} />
+              <select
+                value={itemsPerPage}
+                onChange={(e) => setItemsPerPage(Number(e.target.value))}
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                  isDark
+                    ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
+                    : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
+                } focus:ring-2 focus:ring-emerald-400/20`}
+              >
+                <option value={10}>10 per page</option>
+                <option value={25}>25 per page</option>
+                <option value={50}>50 per page</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className={`text-sm font-medium transition-colors ${
+              isDark ? 'text-slate-300' : 'text-slate-700'
+            }`}>Page</label>
+            <div className="flex items-center gap-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
+                disabled={pageNumber === 1}
+                className={`p-3 rounded-xl border transition-all ${
+                  isDark
+                    ? 'bg-slate-800/50 border-slate-600 text-white disabled:opacity-50'
+                    : 'bg-white/50 border-slate-300 text-slate-900 disabled:opacity-50'
+                }`}
+              >
+                ‹
+              </motion.button>
+              <span className={`flex-1 text-center py-3 transition-colors ${
+                isDark ? 'text-white' : 'text-slate-900'
+              }`}>
+                {pageNumber} / {totalPages}
               </span>
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="space-y-2">
-              <label className={`text-sm font-medium transition-colors ${
-                isDark ? 'text-slate-300' : 'text-slate-700'
-              }`}>Sort By</label>
-              <div className="relative">
-                <BarChart3 className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
-                  isDark ? 'text-slate-400' : 'text-slate-500'
-                }`} />
-                <select
-                  value={sortBy}
-                  onChange={(e) => handleSortChange(e.target.value)}
-                  className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
-                    isDark
-                      ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
-                      : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
-                  } focus:ring-2 focus:ring-emerald-400/20`}
-                >
-                  <option value="price">Price</option>
-                  <option value="change">Daily Change</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className={`text-sm font-medium transition-colors ${
-                isDark ? 'text-slate-300' : 'text-slate-700'
-              }`}>Order</label>
-              <div className="relative">
-                <ArrowUpDown className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
-                  isDark ? 'text-slate-400' : 'text-slate-500'
-                }`} />
-                <select
-                  value={sortOrder}
-                  onChange={(e) => setSortOrder(e.target.value)}
-                  className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
-                    isDark
-                      ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
-                      : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
-                  } focus:ring-2 focus:ring-emerald-400/20`}
-                >
-                  <option value="desc">High to Low</option>
-                  <option value="asc">Low to High</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className={`text-sm font-medium transition-colors ${
-                isDark ? 'text-slate-300' : 'text-slate-700'
-              }`}>Items per Page</label>
-              <div className="relative">
-                <Filter className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 transition-colors ${
-                  isDark ? 'text-slate-400' : 'text-slate-500'
-                }`} />
-                <select
-                  value={itemsPerPage}
-                  onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                  className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
-                    isDark
-                      ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
-                      : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
-                  } focus:ring-2 focus:ring-emerald-400/20`}
-                >
-                  <option value={10}>10 per page</option>
-                  <option value={25}>25 per page</option>
-                  <option value={50}>50 per page</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className={`text-sm font-medium transition-colors ${
-                isDark ? 'text-slate-300' : 'text-slate-700'
-              }`}>Page</label>
-              <div className="flex items-center gap-2">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
-                  disabled={pageNumber === 1}
-                  className={`p-3 rounded-xl border transition-all ${
-                    isDark
-                      ? 'bg-slate-800/50 border-slate-600 text-white disabled:opacity-50'
-                      : 'bg-white/50 border-slate-300 text-slate-900 disabled:opacity-50'
-                  }`}
-                >
-                  ‹
-                </motion.button>
-                <span className={`flex-1 text-center py-3 transition-colors ${
-                  isDark ? 'text-white' : 'text-slate-900'
-                }`}>
-                  {pageNumber} / {totalPages}
-                </span>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setPageNumber(Math.min(totalPages, pageNumber + 1))}
-                  disabled={pageNumber === totalPages}
-                  className={`p-3 rounded-xl border transition-all ${
-                    isDark
-                      ? 'bg-slate-800/50 border-slate-600 text-white disabled:opacity-50'
-                      : 'bg-white/50 border-slate-300 text-slate-900 disabled:opacity-50'
-                  }`}
-                >
-                  ›
-                </motion.button>
-              </div>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setPageNumber(Math.min(totalPages, pageNumber + 1))}
+                disabled={pageNumber === totalPages}
+                className={`p-3 rounded-xl border transition-all ${
+                  isDark
+                    ? 'bg-slate-800/50 border-slate-600 text-white disabled:opacity-50'
+                    : 'bg-white/50 border-slate-300 text-slate-900 disabled:opacity-50'
+                }`}
+              >
+                ›
+              </motion.button>
             </div>
           </div>
+
+          <div className="space-y-2">
+            <label className={`text-sm font-medium transition-colors ${
+              isDark ? 'text-slate-300' : 'text-slate-700'
+            }`}>View</label>
+            <div className="flex items-center gap-2">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setViewMode("grid")}
+                className={`flex-1 p-3 rounded-xl border transition-all ${
+                  viewMode === "grid"
+                    ? isDark
+                      ? 'bg-emerald-500/20 border-emerald-400 text-emerald-400'
+                      : 'bg-emerald-500/20 border-emerald-500 text-emerald-600'
+                    : isDark
+                    ? 'bg-slate-800/50 border-slate-600 text-slate-400 hover:bg-slate-700'
+                    : 'bg-white/50 border-slate-300 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <Grid3X3 className="w-4 h-4 mx-auto" />
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setViewMode("table")}
+                className={`flex-1 p-3 rounded-xl border transition-all ${
+                  viewMode === "table"
+                    ? isDark
+                      ? 'bg-emerald-500/20 border-emerald-400 text-emerald-400'
+                      : 'bg-emerald-500/20 border-emerald-500 text-emerald-600'
+                    : isDark
+                    ? 'bg-slate-800/50 border-slate-600 text-slate-400 hover:bg-slate-700'
+                    : 'bg-white/50 border-slate-300 text-slate-600 hover:bg-slate-50'
+                }`}
+              >
+                <List className="w-4 h-4 mx-auto" />
+              </motion.button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Stock Grid Section */}
@@ -360,215 +409,222 @@ const ComparisonsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className={`backdrop-blur-xl rounded-3xl p-8 transition-colors ${
-            isDark
-              ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50'
-              : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
-          }`}
+          className="text-center mb-16"
         >
-          <div className="text-center mb-8">
-            <div className="inline-flex px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
-              <span className="text-blue-400 font-semibold text-sm">Market Analysis</span>
-            </div>
-            <h3 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors ${
-              isDark ? 'text-white' : 'text-slate-900'
-            }`}>
-              Stock
-              <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                Comparison Grid
-              </span>
-            </h3>
-            <p className={`text-lg transition-colors ${
-              isDark ? 'text-slate-300' : 'text-slate-600'
-            }`}>
-              Compare stocks side by side with real-time data and analytics
-            </p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6"
+          >
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            </span>
+            <span className="text-blue-400 font-semibold text-sm">Market Analysis</span>
+          </motion.div>
+          <h3 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors ${
+            isDark ? 'text-white' : 'text-slate-900'
+          }`}>
+            Stock
+            <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Comparison Grid
+            </span>
+          </h3>
+          <p className={`text-xl max-w-2xl mx-auto transition-colors ${
+            isDark ? 'text-slate-400' : 'text-slate-600'
+          }`}>
+            Compare stocks side by side with real-time data and analytics
+          </p>
+        </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {currentStocks.map((stock, index) => (
+        {/* Grid/Table View Toggle */}
+        {viewMode === "grid" ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {paginatedStocks.map((stock, index) => (
               <motion.div
                 key={stock.symbol}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -5 }}
-                className={`backdrop-blur-xl rounded-2xl p-6 transition-all cursor-pointer ${
+                whileHover={{ scale: 1.02, y: -4 }}
+                onClick={() => setSelectedStock(stock)}
+                className={`group relative backdrop-blur-sm rounded-2xl p-6 cursor-pointer overflow-hidden transition-all duration-300 ${
                   isDark
-                    ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 hover:border-emerald-400/50'
-                    : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50 hover:border-emerald-500/50'
+                    ? 'bg-slate-800/30 border border-slate-700/50 hover:border-slate-600'
+                    : 'bg-white/30 border border-slate-200/50 hover:border-slate-300'
                 }`}
-                onClick={() => handleStockClick(stock)}
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${
+                {/* Gradient Background on Hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+                        <BarChart3 className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className={`text-lg font-bold transition-colors ${
+                          isDark ? 'text-white' : 'text-slate-900'
+                        }`}>{stock.symbol}</h3>
+                        <p className={`text-sm transition-colors ${
+                          isDark ? 'text-slate-400' : 'text-slate-600'
+                        }`}>{stock.name.length > 20 ? `${stock.name.substring(0, 20)}...` : stock.name}</p>
+                      </div>
+                    </div>
+                    <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${
                       stock.change >= 0
                         ? 'bg-emerald-500/20 text-emerald-400'
+                        : stock.change === 0
+                        ? 'bg-slate-500/20 text-slate-400'
                         : 'bg-red-500/20 text-red-400'
                     }`}>
-                      <TrendingUp className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h4 className={`font-bold text-lg transition-colors ${
-                        isDark ? 'text-white' : 'text-slate-900'
-                      }`}>
-                        {stock.symbol}
-                      </h4>
-                      <p className={`text-sm transition-colors ${
-                        isDark ? 'text-slate-400' : 'text-slate-500'
-                      }`}>
-                        {stock.name}
-                      </p>
-                    </div>
-                  </div>
-                  <div className={`text-right transition-colors ${
-                    stock.change >= 0 ? 'text-emerald-400' : 'text-red-400'
-                  }`}>
-                    <div className="font-bold text-lg">
-                      ₹{stock.price.toLocaleString()}
-                    </div>
-                    <div className="text-sm">
+                      {stock.change >= 0 ? (
+                        <TrendingUp className="w-4 h-4" />
+                      ) : stock.change === 0 ? (
+                        <Activity className="w-4 h-4" />
+                      ) : (
+                        <TrendingDown className="w-4 h-4" />
+                      )}
                       {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
                     </div>
                   </div>
-                </div>
 
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className={`text-sm transition-colors ${
-                      isDark ? 'text-slate-400' : 'text-slate-500'
-                    }`}>Volume</span>
-                    <span className={`font-medium transition-colors ${
+                  <div className="mb-4">
+                    <p className={`text-2xl font-bold mb-2 transition-colors ${
                       isDark ? 'text-white' : 'text-slate-900'
                     }`}>
-                      {(stock.volume / 1000000).toFixed(1)}M
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className={`text-sm transition-colors ${
-                      isDark ? 'text-slate-400' : 'text-slate-500'
-                    }`}>Market Cap</span>
-                    <span className={`font-medium transition-colors ${
-                      isDark ? 'text-white' : 'text-slate-900'
+                      ₹{stock.price.toLocaleString()}
+                    </p>
+                    <div className={`h-2 rounded-full transition-colors ${
+                      isDark ? 'bg-slate-700' : 'bg-slate-200'
                     }`}>
-                      ₹{(stock.marketCap / 1000000000).toFixed(1)}B
-                    </span>
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          stock.change >= 0 ? 'bg-gradient-to-r from-emerald-400 to-emerald-500' :
+                          stock.change === 0 ? 'bg-gradient-to-r from-slate-400 to-slate-500' : 'bg-gradient-to-r from-red-400 to-red-500'
+                        }`}
+                        style={{
+                          width: `${Math.min(Math.abs(stock.change), 100)}%`
+                        }}
+                      />
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className={`text-sm transition-colors ${
-                      isDark ? 'text-slate-400' : 'text-slate-500'
-                    }`}>P/E Ratio</span>
-                    <span className={`font-medium transition-colors ${
-                      isDark ? 'text-white' : 'text-slate-900'
-                    }`}>
-                      {stock.peRatio?.toFixed(1) || 'N/A'}
-                    </span>
-                  </div>
-                </div>
 
-                <div className="mt-4 pt-4 border-t border-slate-700/50">
                   <div className="flex items-center justify-between">
-                    <span className={`text-sm transition-colors ${
-                      isDark ? 'text-slate-400' : 'text-slate-500'
-                    }`}>52W High</span>
-                    <span className={`font-medium transition-colors ${
-                      isDark ? 'text-white' : 'text-slate-900'
+                    <div className="flex items-center gap-2 text-blue-400 font-semibold group-hover:gap-3 transition-all">
+                      <Eye className="w-4 h-4" />
+                      <span className="text-sm">View Details</span>
+                    </div>
+                    <div className={`text-xs transition-colors ${
+                      isDark ? 'text-slate-400' : 'text-slate-600'
                     }`}>
-                      ₹{stock.high52Week.toLocaleString()}
-                    </span>
+                      Vol: {stock.otherDetails.volume ? (stock.otherDetails.volume / 1000000).toFixed(1) + 'M' : 'N/A'}
+                    </div>
                   </div>
                 </div>
               </motion.div>
             ))}
           </div>
-
-          {currentStocks.length === 0 && (
-            <div className="text-center py-12">
-              <BarChart3 className={`w-16 h-16 mx-auto mb-4 transition-colors ${
-                isDark ? 'text-slate-600' : 'text-slate-400'
-              }`} />
-              <h4 className={`text-xl font-semibold mb-2 transition-colors ${
-                isDark ? 'text-white' : 'text-slate-900'
-              }`}>
-                No stocks found
-              </h4>
-              <p className={`transition-colors ${
-                isDark ? 'text-slate-400' : 'text-slate-500'
-              }`}>
-                Try adjusting your filters or search criteria
-              </p>
-            </div>
-          )}
-        </motion.div>
-      </div>
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1, repeat: Infinity }}
-              className="inline-block text-4xl"
-            >
-              ⏳
-            </motion.div>
-          </div>
-        )}
-
-        {error && (
-          <div className="text-center text-red-400 p-4 rounded-xl bg-red-900/30">
-            ⚠️ Error: {error}
-          </div>
-        )}
-
-        {/* Stocks Table */}
-        {!loading && !error && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-gray-800/50 backdrop-blur-lg p-6 rounded-2xl border border-gray-700"
-          >
+        ) : (
+          <div className={`backdrop-blur-sm rounded-2xl overflow-hidden transition-colors ${
+            isDark
+              ? 'bg-slate-800/40 border border-slate-700/50'
+              : 'bg-white/40 border border-slate-200/50'
+          }`}>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead>
-                  <tr className="text-gray-400 text-left border-b border-gray-700">
-                    <th className="pb-4">Stock</th>
-                    <th className="pb-4 cursor-pointer" onClick={() => handleSortChange("price")}>
-                      Price {sortBy === "price" && (sortOrder === "asc" ? "↑" : "↓")}
-                    </th>
-                    <th className="pb-4 cursor-pointer" onClick={() => handleSortChange("change")}>
-                      Change {sortBy === "change" && (sortOrder === "asc" ? "↑" : "↓")}
-                    </th>
-                    <th className="pb-4">Actions</th>
+                <thead className={`transition-colors ${
+                  isDark ? 'bg-slate-700/30' : 'bg-slate-50/50'
+                }`}>
+                  <tr>
+                    <th className={`px-6 py-4 text-left text-sm font-semibold transition-colors ${
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    }`}>Symbol</th>
+                    <th className={`px-6 py-4 text-left text-sm font-semibold transition-colors ${
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    }`}>Company</th>
+                    <th className={`px-6 py-4 text-right text-sm font-semibold transition-colors ${
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    }`}>Price</th>
+                    <th className={`px-6 py-4 text-right text-sm font-semibold transition-colors ${
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    }`}>Change</th>
+                    <th className={`px-6 py-4 text-right text-sm font-semibold transition-colors ${
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    }`}>Volume</th>
+                    <th className={`px-6 py-4 text-center text-sm font-semibold transition-colors ${
+                      isDark ? 'text-slate-300' : 'text-slate-700'
+                    }`}>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedStocks.map((stock) => (
-                    <motion.tr 
+                  {paginatedStocks.map((stock, index) => (
+                    <motion.tr
                       key={stock.symbol}
-                      whileHover={{ scale: 1.01 }}
-                      className="border-b border-gray-700 hover:bg-gray-800/20"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.05 }}
+                      onClick={() => setSelectedStock(stock)}
+                      className={`cursor-pointer transition-colors hover:${
+                        isDark ? 'bg-slate-700/20' : 'bg-slate-50/30'
+                      } border-b ${
+                        isDark ? 'border-slate-700/30' : 'border-slate-200/30'
+                      }`}
                     >
-                      <td className="py-4">
-                        <div className="flex items-center space-x-4">
-                          <div className="bg-blue-500/20 p-3 rounded-lg">
-                            {stock.symbol}
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="p-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
+                            <BarChart3 className="w-4 h-4 text-white" />
                           </div>
-                          <div>
-                            <p className="text-gray-200 font-medium">{stock.name}</p>
-                          </div>
+                          <span className={`font-semibold transition-colors ${
+                            isDark ? 'text-white' : 'text-slate-900'
+                          }`}>{stock.symbol}</span>
                         </div>
                       </td>
-                      <td className="text-gray-200">
-                        ₹{stock.rawPrice?.toFixed(2) || 'N/A'}
+                      <td className={`px-6 py-4 text-sm transition-colors ${
+                        isDark ? 'text-slate-300' : 'text-slate-700'
+                      }`}>
+                        {stock.name.length > 30 ? `${stock.name.substring(0, 30)}...` : stock.name}
                       </td>
-                      <td className={stock.change >= 0 ? "text-green-400" : "text-red-400"}>
-                        {stock.change >= 0 ? '+' : ''}{stock.rawChange?.toFixed(2)}%
+                      <td className={`px-6 py-4 text-right font-bold transition-colors ${
+                        isDark ? 'text-white' : 'text-slate-900'
+                      }`}>
+                        ₹{stock.price.toLocaleString()}
                       </td>
-                      <td>
+                      <td className="px-6 py-4 text-right">
+                        <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm font-semibold ${
+                          stock.change >= 0
+                            ? 'bg-emerald-500/20 text-emerald-400'
+                            : stock.change === 0
+                            ? 'bg-slate-500/20 text-slate-400'
+                            : 'bg-red-500/20 text-red-400'
+                        }`}>
+                          {stock.change >= 0 ? (
+                            <TrendingUp className="w-3 h-3" />
+                          ) : stock.change === 0 ? (
+                            <Activity className="w-3 h-3" />
+                          ) : (
+                            <TrendingDown className="w-3 h-3" />
+                          )}
+                          {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
+                        </div>
+                      </td>
+                      <td className={`px-6 py-4 text-right text-sm transition-colors ${
+                        isDark ? 'text-slate-400' : 'text-slate-600'
+                      }`}>
+                        {stock.otherDetails.volume ? (stock.otherDetails.volume / 1000000).toFixed(1) + 'M' : 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 text-center">
                         <motion.button
-                          onClick={() => setSelectedStock(selectedStock === stock.symbol ? null : stock.symbol)}
                           whileHover={{ scale: 1.05 }}
-                          className="bg-gradient-to-r from-green-400/20 to-blue-500/20 px-4 py-2 rounded-lg text-green-400 border border-green-400/30"
+                          whileTap={{ scale: 0.95 }}
+                          className="p-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors"
                         >
-                          {selectedStock === stock.symbol ? "Hide" : "Analyze"}
+                          <Eye className="w-4 h-4" />
                         </motion.button>
                       </td>
                     </motion.tr>
@@ -576,152 +632,330 @@ const ComparisonsPage = () => {
                 </tbody>
               </table>
             </div>
-
-            {/* Pagination Controls */}
-            <div className="flex justify-between items-center mt-6">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                onClick={() => setPageNumber(Math.max(1, pageNumber - 1))}
-                disabled={pageNumber === 1}
-                className="px-4 py-2 rounded-lg bg-gray-700/30 border border-gray-600 text-gray-300 disabled:opacity-50"
-              >
-                Previous
-              </motion.button>
-              
-              <span className="text-gray-400">
-                Showing {(pageNumber - 1) * itemsPerPage + 1} -{' '}
-                {Math.min(pageNumber * itemsPerPage, sortedStocks.length)} of{' '}
-                {sortedStocks.length} stocks
-              </span>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                onClick={() => setPageNumber(Math.min(totalPages, pageNumber + 1))}
-                disabled={pageNumber === totalPages}
-                className="px-4 py-2 rounded-lg bg-gray-700/30 border border-gray-600 text-gray-300 disabled:opacity-50"
-              >
-                Next
-              </motion.button>
-            </div>
-          </motion.div>
+          </div>
         )}
 
-        {/* Detailed Analysis */}
-        {selectedStock && (
-  <motion.div 
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    className="bg-gray-800/50 backdrop-blur-lg p-6 rounded-2xl border border-gray-700 space-y-6"
-  >
-    {paginatedStocks
-      .filter(stock => stock.symbol === selectedStock)
-      .map(stock => (
-        <div key={stock.symbol} className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h3 className="text-2xl font-bold text-gray-200">{stock.name} Analysis</h3>
-            <button 
-              onClick={() => setSelectedStock(null)}
-              className="text-gray-400 hover:text-gray-200"
-            >
-              ✕
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-gray-700/20 p-4 rounded-xl">
-              <p className="text-gray-400 text-sm">Current Price</p>
-              <p className="text-2xl text-green-400 mt-1">
-                ₹{stock.rawPrice?.toFixed(2) || 'N/A'}
-              </p>
-            </div>
-            <div className="bg-gray-700/20 p-4 rounded-xl">
-              <p className="text-gray-400 text-sm">Daily Change</p>
-              <p className={`text-2xl ${stock.change >= 0 ? 'text-green-400' : 'text-red-400'} mt-1`}>
-                {stock.change >= 0 ? '+' : ''}{stock.rawChange?.toFixed(2)}%
-              </p>
-            </div>
-          </div>
-
-          {stock.chartToday && (
-  <motion.div 
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    className="relative border-2 border-emerald-400/20 rounded-xl p-4 bg-gradient-to-br from-gray-900/50 to-emerald-900/20"
-  >
-    {/* Chart Header */}
-    <div className="flex items-center justify-between mb-3">
-      <span className="text-emerald-400 text-sm font-mono">Live Chart</span>
-      <span className="text-gray-400 text-sm">{stock.symbol}</span>
-    </div>
-
-    {/* Image Container with Loading State */}
-    <div className="relative group">
-      <img 
-        src={stock.chartToday}
-        alt={`${stock.name} historical price chart`}
-        className="w-full h-64 object-cover rounded-lg border border-emerald-400/10 bg-gray-800/30"
-        onError={(e) => {
-          e.target.style.display = 'none';
-        }}
-      />
-      
-      {/* Loading Overlay */}
-      <div className="absolute inset-0 flex items-center justify-center bg-gray-900/50 rounded-lg">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity }}
-          className="text-emerald-400 text-2xl"
-        >
-          ⏳
-        </motion.div>
-      </div>
-    </div>
-
-    {/* Chart Footer */}
-    <div className="mt-3 flex justify-between items-center text-xs text-gray-400">
-      <span>Intraday Performance</span>
-      <div className="flex items-center space-x-2">
-        <span className="h-2 w-2 bg-emerald-400 rounded-full animate-pulse"></span>
-        <span>Live Data</span>
-      </div>
-    </div>
-
-    {/* Hover Overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl pointer-events-none">
-      <div className="absolute bottom-4 left-4 text-xs text-emerald-400">
-        Updated: {new Date().toLocaleTimeString()}
-      </div>
-    </div>
-  </motion.div>
-)}
-        </div>
-      ))}
-  </motion.div>
-)}
-      </div>
-
-      {/* Footer */}
-      <footer className="mt-16 bg-gray-900/50 backdrop-blur-md py-6 border-t border-gray-700/50">
-        <div className="container mx-auto text-center text-gray-400">
+        {paginatedStocks.length === 0 && (
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            className="flex justify-center mb-4"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className={`backdrop-blur-sm rounded-2xl p-12 text-center transition-colors ${
+              isDark
+                ? 'bg-slate-800/40 border border-slate-700/50'
+                : 'bg-white/40 border border-slate-200/50'
+            }`}
           >
-            <div className="relative z-20 p-1 rounded-full bg-gradient-to-r from-green-400 to-blue-500">
-              <div className="bg-gray-800 p-1 rounded-full">
-                <img 
-                  src="/financer.png" 
-                  alt="Footer Logo" 
-                  className="h-12 w-12 object-contain" 
-                />
-              </div>
+            <div className="p-4 rounded-xl bg-gradient-to-br from-slate-500 to-gray-600 w-fit mx-auto mb-4">
+              <BarChart3 className="w-8 h-8 text-white" />
             </div>
+            <h3 className={`text-xl font-bold mb-2 transition-colors ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>No stocks found</h3>
+            <p className={`transition-colors ${
+              isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}>
+              Try adjusting your filters or search criteria
+            </p>
           </motion.div>
-          <p>“Financial freedom is available to those who learn about it and work for it.”</p>
-          <p className="mt-4">&copy; 2025 Financer. All rights reserved.</p>
+        )}
+      </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-20">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center"
+          >
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              className="inline-block p-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 mb-4"
+            >
+              <Activity className="w-8 h-8 text-white" />
+            </motion.div>
+            <h3 className={`text-xl font-semibold transition-colors ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>Loading Market Data...</h3>
+            <p className={`text-sm transition-colors ${
+              isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}>Fetching latest stock information</p>
+          </motion.div>
         </div>
-      </footer>
+      )}
+
+      {/* Error State */}
+      {error && (
+        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-20">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className={`backdrop-blur-xl rounded-3xl p-12 text-center transition-colors ${
+              isDark
+                ? 'bg-red-900/20 border border-red-500/20'
+                : 'bg-red-50/50 border border-red-200/50'
+            }`}
+          >
+            <div className="p-4 rounded-full bg-red-500/20 w-fit mx-auto mb-4">
+              <X className="w-8 h-8 text-red-400" />
+            </div>
+            <h3 className={`text-xl font-semibold mb-2 transition-colors ${
+              isDark ? 'text-white' : 'text-slate-900'
+            }`}>Unable to Load Market Data</h3>
+            <p className={`transition-colors ${
+              isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}>{error}</p>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Detail Modal */}
+      {selectedStock && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.95, opacity: 0 }}
+            className={`backdrop-blur-xl rounded-3xl p-8 max-w-6xl w-full max-h-[90vh] overflow-y-auto transition-colors ${
+              isDark
+                ? 'bg-slate-800/95 border border-slate-700/50'
+                : 'bg-white/95 border border-slate-200/50'
+            }`}
+          >
+            {selectedStock && (
+                <div key={selectedStock.symbol}>
+                  <div className="flex justify-between items-start mb-8">
+                    <div className="flex items-center gap-4">
+                      <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+                        <BarChart3 className="w-8 h-8 text-white" />
+                      </div>
+                      <div>
+                        <h2 className={`text-3xl font-bold transition-colors ${
+                          isDark ? 'text-white' : 'text-slate-900'
+                        }`}>
+                          {selectedStock.name}
+                        </h2>
+                        <p className={`text-lg transition-colors ${
+                          isDark ? 'text-slate-400' : 'text-slate-600'
+                        }`}>{selectedStock.symbol} • Detailed Analysis</p>
+                      </div>
+                    </div>
+                    <motion.button
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      onClick={() => setSelectedStock(null)}
+                      className={`p-3 rounded-xl transition-colors ${
+                        isDark
+                          ? 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 hover:text-white'
+                          : 'bg-slate-200/50 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                      }`}
+                    >
+                      <X className="w-6 h-6" />
+                    </motion.button>
+                  </div>
+
+                  <div className="grid lg:grid-cols-2 gap-8">
+                    <div className="space-y-6">
+                      {/* Price Details Card */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
+                          isDark
+                            ? 'bg-slate-800/40 border border-slate-700/50'
+                            : 'bg-white/40 border border-slate-200/50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+                            <TrendingUp className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className={`text-xl font-bold transition-colors ${
+                            isDark ? 'text-white' : 'text-slate-900'
+                          }`}>Price Details</h3>
+                        </div>
+                        <div className="space-y-4">
+                          <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-blue-500/10 to-purple-500/10">
+                            <span className={`font-medium transition-colors ${
+                              isDark ? 'text-slate-300' : 'text-slate-700'
+                            }`}>Current Price</span>
+                            <p className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                              ₹{selectedStock.price.toLocaleString()}
+                            </p>
+                          </div>
+                          <div className={`flex justify-between items-center p-4 rounded-xl transition-colors ${
+                            isDark ? 'bg-slate-700/30' : 'bg-slate-50/50'
+                          }`}>
+                            <span className={`font-medium transition-colors ${
+                              isDark ? 'text-slate-300' : 'text-slate-700'
+                            }`}>Daily Change</span>
+                            <p className={`text-2xl font-bold ${
+                              selectedStock.change >= 0 ? 'text-emerald-400' :
+                              selectedStock.change === 0 ? 'text-slate-400' : 'text-red-400'
+                            }`}>
+                              {selectedStock.change >= 0 ? '+' : ''}{selectedStock.change.toFixed(2)}%
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+
+                      {/* Trading Details Card */}
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
+                          isDark
+                            ? 'bg-slate-800/40 border border-slate-700/50'
+                            : 'bg-white/40 border border-slate-200/50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600">
+                            <Activity className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className={`text-xl font-bold transition-colors ${
+                            isDark ? 'text-white' : 'text-slate-900'
+                          }`}>Trading Details</h3>
+                        </div>
+                        <div className="space-y-3">
+                          {[
+                            { label: 'Open', value: `₹${selectedStock.otherDetails.open?.toFixed(2) || 'N/A'}`, color: 'text-blue-400' },
+                            { label: 'High', value: `₹${selectedStock.otherDetails.high?.toFixed(2) || 'N/A'}`, color: 'text-emerald-400' },
+                            { label: 'Low', value: `₹${selectedStock.otherDetails.low?.toFixed(2) || 'N/A'}`, color: 'text-red-400' },
+                            { label: 'Volume', value: selectedStock.otherDetails.volume?.toLocaleString() || 'N/A', color: 'text-purple-400' }
+                          ].map((item, index) => (
+                            <div key={index} className={`flex justify-between items-center p-3 rounded-xl transition-colors ${
+                              isDark ? 'bg-slate-700/30' : 'bg-slate-50/50'
+                            }`}>
+                              <span className={`font-medium transition-colors ${
+                                isDark ? 'text-slate-300' : 'text-slate-700'
+                              }`}>{item.label}</span>
+                              <span className={`font-semibold ${item.color}`}>
+                                {item.value}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    </div>
+
+                    <div className="space-y-6">
+                      {/* Chart Card */}
+                      {selectedStock.historical && selectedStock.historical.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
+                            isDark
+                              ? 'bg-slate-800/40 border border-slate-700/50'
+                              : 'bg-white/40 border border-slate-200/50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3 mb-6">
+                            <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                              <BarChart3 className="w-5 h-5 text-white" />
+                            </div>
+                            <h3 className={`text-xl font-bold transition-colors ${
+                              isDark ? 'text-white' : 'text-slate-900'
+                            }`}>Price Movement</h3>
+                          </div>
+                          <div className={`p-4 rounded-xl transition-colors ${
+                            isDark ? 'bg-slate-700/30' : 'bg-slate-50/50'
+                          }`}>
+                            <Line
+                              data={getChartData(selectedStock.historical)}
+                              options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                  legend: { display: false },
+                                  tooltip: {
+                                    backgroundColor: isDark ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                                    titleColor: isDark ? '#e2e8f0' : '#1e293b',
+                                    bodyColor: isDark ? '#cbd5e1' : '#475569',
+                                    borderColor: isDark ? '#475569' : '#e2e8f0',
+                                    borderWidth: 1,
+                                  },
+                                },
+                                scales: {
+                                  x: {
+                                    grid: { display: false },
+                                    ticks: { color: isDark ? '#94a3b8' : '#64748b' },
+                                  },
+                                  y: {
+                                    grid: { color: isDark ? 'rgba(71, 85, 105, 0.2)' : 'rgba(226, 232, 240, 0.5)' },
+                                    ticks: { color: isDark ? '#94a3b8' : '#64748b' },
+                                  },
+                                },
+                              }}
+                              height={200}
+                            />
+                          </div>
+                        </motion.div>
+                      )}
+
+                      {/* Performance Indicator */}
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
+                          isDark
+                            ? 'bg-slate-800/40 border border-slate-700/50'
+                            : 'bg-white/40 border border-slate-200/50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3 mb-6">
+                          <div className="p-2 rounded-xl bg-gradient-to-br from-orange-500 to-red-600">
+                            <Star className="w-5 h-5 text-white" />
+                          </div>
+                          <h3 className={`text-xl font-bold transition-colors ${
+                            isDark ? 'text-white' : 'text-slate-900'
+                          }`}>Performance</h3>
+                        </div>
+                        <div className="space-y-4">
+                          <div className={`p-4 rounded-xl transition-colors ${
+                            selectedStock.change >= 0
+                              ? 'bg-emerald-500/10 border border-emerald-500/20'
+                              : selectedStock.change === 0
+                              ? 'bg-slate-500/10 border border-slate-500/20'
+                              : 'bg-red-500/10 border border-red-500/20'
+                          }`}>
+                            <div className="flex items-center justify-between">
+                              <span className={`font-medium transition-colors ${
+                                isDark ? 'text-slate-300' : 'text-slate-700'
+                              }`}>Trend</span>
+                              <div className="flex items-center gap-2">
+                                {selectedStock.change > 0 ? (
+                                  <TrendingUp className="w-5 h-5 text-emerald-400" />
+                                ) : selectedStock.change === 0 ? (
+                                  <Activity className="w-5 h-5 text-slate-400" />
+                                ) : (
+                                  <TrendingDown className="w-5 h-5 text-red-400" />
+                                )}
+                                <span className={`font-bold ${
+                                  selectedStock.change > 0 ? 'text-emerald-400' :
+                                  selectedStock.change === 0 ? 'text-slate-400' : 'text-red-400'
+                                }`}>
+                                  {selectedStock.change > 0 ? 'Bullish' :
+                                   selectedStock.change === 0 ? 'Neutral' : 'Bearish'}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </div>
+                  </div>
+                </div>
+              )}
+          </motion.div>
+        </div>
+      )}
+
+      <Footer />
     </div>
   );
 };
