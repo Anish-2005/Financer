@@ -17,115 +17,79 @@ from fake_useragent import UserAgent
 logger = logging.getLogger(__name__)
 
 
+import yfinance as yf
+
 class NSEDataService:
-    """Enhanced NSE data service with robust error handling and additional features"""
+    """Enhanced NSE data service using yfinance for reliability"""
 
     def __init__(self):
-        self.base_url = "https://www.nseindia.com"
-        self.api_base = "https://www.nseindia.com/api"
-        self.session = None
         self.ua = UserAgent()
-
-        # Rate limiting
-        self.last_request_time = 0
-        self.min_request_interval = 1.0  # seconds
-
-        # Initialize session
-        self._init_session()
-
-    def _init_session(self):
-        """Initialize HTTP session with proper headers and retries"""
-        self.session = requests.Session()
-
-        # Retry strategy
-        retry_strategy = Retry(
-            total=3,
-            status_forcelist=[429, 500, 502, 503, 504],
-            backoff_factor=1,
-            raise_on_status=False
-        )
-
-        adapter = HTTPAdapter(max_retries=retry_strategy)
-        self.session.mount("http://", adapter)
-        self.session.mount("https://", adapter)
-
-    def _get_headers(self) -> Dict[str, str]:
-        """Get headers for NSE requests"""
-        return {
-            "User-Agent": self.ua.random,
-            "Accept": "application/json, text/plain, */*",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate, br",
-            "DNT": "1",
-            "Connection": "keep-alive",
-            "Upgrade-Insecure-Requests": "1",
-            "Sec-Fetch-Dest": "document",
-            "Sec-Fetch-Mode": "navigate",
-            "Sec-Fetch-Site": "none",
-            "Cache-Control": "max-age=0",
-        }
-
-    async def _rate_limit_wait(self):
-        """Implement rate limiting"""
-        current_time = asyncio.get_event_loop().time()
-        time_since_last = current_time - self.last_request_time
-
-        if time_since_last < self.min_request_interval:
-            await asyncio.sleep(self.min_request_interval - time_since_last)
-
-        self.last_request_time = asyncio.get_event_loop().time()
-
-    def _establish_session(self) -> bool:
-        """Establish session with NSE website"""
-        try:
-            # First request to get cookies
-            response = self.session.get(
-                self.base_url,
-                headers=self._get_headers(),
-                timeout=10
-            )
-            response.raise_for_status()
-
-            # Wait and make second request
-            import time
-            time.sleep(1)
-
-            response = self.session.get(
-                f"{self.base_url}/market-data/live-equity-market",
-                headers=self._get_headers(),
-                timeout=10
-            )
-            response.raise_for_status()
-
-            return True
-
-        except Exception as e:
-            logger.error(f"Session establishment failed: {e}")
-            return False
+        # List of NIFTY 50 stocks + some popular ones
+        self.tickers = [
+            "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "ICICIBANK.NS", "INFY.NS",
+            "HINDUNILVR.NS", "ITC.NS", "SBIN.NS", "BHARTIARTL.NS", "KOTAKBANK.NS",
+            "LT.NS", "AXISBANK.NS", "ASIANPAINT.NS", "MARUTI.NS", "TITAN.NS",
+            "BAJFINANCE.NS", "HCLTECH.NS", "SUNPHARMA.NS", "TATAMOTORS.NS", "ULTRACEMCO.NS",
+            "POWERGRID.NS", "NTPC.NS", "M&M.NS", "ONGC.NS", "ADANIENT.NS",
+            "ADANIPORTS.NS", "BAJAJFINSV.NS", "BPCL.NS", "BRITANNIA.NS", "CIPLA.NS",
+            "COALINDIA.NS", "DIVISLAB.NS", "DRREDDY.NS", "EICHERMOT.NS", "GRASIM.NS",
+            "HEROMOTOCO.NS", "HINDALCO.NS", "INDUSINDBK.NS", "JSWSTEEL.NS", "LTIM.NS",
+            "NESTLEIND.NS", "SBILIFE.NS", "TATACONSUM.NS", "TATASTEEL.NS", "TECHM.NS",
+            "UPL.NS", "WIPRO.NS", "APOLLOHOSP.NS", "BAJAJ-AUTO.NS"
+        ]
 
     async def get_stock_data(self) -> Dict[str, Any]:
-        """Get NSE stock market data"""
+        """Get NSE stock market data using yfinance"""
         try:
-            await self._rate_limit_wait()
+            # Fetch data for all tickers in one go
+            tickers_str = " ".join(self.tickers)
+            data = yf.download(tickers_str, period="1d", group_by='ticker', threads=True)
+            
+            processed_data = []
+            
+            for ticker in self.tickers:
+                try:
+                    # Handle single ticker vs multiple ticker response structure
+                    if len(self.tickers) == 1:
+                        stock_data = data
+                    else:
+                        stock_data = data[ticker]
+                    
+                    if stock_data.empty:
+                        continue
 
-            if not self._establish_session():
-                return {
-                    "data": [],
-                    "error": "Failed to establish NSE session",
-                    "timestamp": datetime.utcnow().isoformat()
-                }
-
-            # Main API request
-            url = f"{self.api_base}/equity-stockIndices?index=NIFTY%20TOTAL%20MARKET"
-            response = self.session.get(
-                url,
-                headers=self._get_headers(),
-                timeout=15
-            )
-            response.raise_for_status()
-
-            raw_data = response.json()
-            processed_data = self._process_stock_data(raw_data.get("data", []))
+                    # Get latest row
+                    latest = stock_data.iloc[-1]
+                    prev_close = stock_data.iloc[0]['Open'] # Approximation for 1d period
+                    
+                    # Calculate change
+                    current_price = float(latest['Close'])
+                    open_price = float(latest['Open'])
+                    change = current_price - open_price
+                    p_change = (change / open_price) * 100 if open_price else 0
+                    
+                    symbol = ticker.replace(".NS", "")
+                    
+                    processed_stock = {
+                        "symbol": symbol,
+                        "name": symbol, # yfinance doesn't give name easily in bulk download
+                        "lastPrice": f"{current_price:,.2f}",
+                        "pChange": f"{p_change:+.2f}",
+                        "change": change,
+                        "change_percent": p_change,
+                        "otherDetails": {
+                            "open": float(latest['Open']),
+                            "high": float(latest['High']),
+                            "low": float(latest['Low']),
+                            "volume": int(latest['Volume']),
+                            "chartToday": None
+                        }
+                    }
+                    processed_data.append(processed_stock)
+                    
+                except Exception as e:
+                    logger.warning(f"Error processing {ticker}: {e}")
+                    continue
 
             return {
                 "data": processed_data,
@@ -134,121 +98,38 @@ class NSEDataService:
                 "total_count": len(processed_data)
             }
 
-        except requests.exceptions.Timeout:
-            logger.error("NSE API request timeout")
-            return {
-                "data": [],
-                "error": "Request timeout - NSE servers may be busy",
-                "timestamp": datetime.utcnow().isoformat()
-            }
-
-        except requests.exceptions.HTTPError as e:
-            logger.error(f"NSE API HTTP error: {e}")
-            return {
-                "data": [],
-                "error": f"NSE API error: {e.response.status_code}",
-                "timestamp": datetime.utcnow().isoformat()
-            }
-
         except Exception as e:
-            logger.error(f"Unexpected error in get_stock_data: {e}")
+            logger.error(f"YFinance error: {e}")
             return {
                 "data": [],
-                "error": f"Unexpected error: {str(e)}",
+                "error": str(e),
                 "timestamp": datetime.utcnow().isoformat()
             }
-
-    def _process_stock_data(self, raw_data: List[Dict]) -> List[Dict]:
-        """Process and clean NSE stock data"""
-        processed = []
-
-        for stock in raw_data:
-            try:
-                # Extract and validate data
-                symbol = stock.get("symbol", "").strip()
-                if not symbol:
-                    continue
-
-                # Parse numeric values safely
-                last_price = self._safe_float_parse(stock.get("lastPrice"))
-                p_change = self._safe_float_parse(stock.get("pChange"))
-                volume = self._safe_int_parse(stock.get("totalTradedVolume"))
-                market_cap = self._safe_float_parse(stock.get("marketCapitalization"))
-
-                processed_stock = {
-                    "symbol": symbol,
-                    "name": stock.get("companyName", symbol),
-                    "price": last_price,
-                    "change": p_change,
-                    "change_percent": p_change,
-                    "volume": volume,
-                    "market_cap": market_cap,
-                    "open": self._safe_float_parse(stock.get("open")),
-                    "high": self._safe_float_parse(stock.get("dayHigh")),
-                    "low": self._safe_float_parse(stock.get("dayLow")),
-                    "previous_close": self._safe_float_parse(stock.get("previousClose")),
-                    "sector": stock.get("industry", "Unknown"),
-                    "last_updated": datetime.utcnow().isoformat(),
-                    "raw_data": stock  # Keep original data for debugging
-                }
-
-                processed.append(processed_stock)
-
-            except Exception as e:
-                logger.warning(f"Error processing stock {stock.get('symbol', 'unknown')}: {e}")
-                continue
-
-        # Sort by market cap (descending)
-        processed.sort(key=lambda x: x.get("market_cap", 0) or 0, reverse=True)
-
-        return processed
 
     async def get_stock_detail(self, symbol: str) -> Optional[Dict[str, Any]]:
         """Get detailed information for a specific stock"""
         try:
-            await self._rate_limit_wait()
-
-            if not self._establish_session():
-                return None
-
-            # Get quote data
-            url = f"{self.api_base}/quote-equity?symbol={symbol}"
-            response = self.session.get(
-                url,
-                headers=self._get_headers(),
-                timeout=10
-            )
-            response.raise_for_status()
-
-            data = response.json()
-
-            if not data.get("info"):
-                return None
-
-            info = data["info"]
-            price_info = data.get("priceInfo", {})
-            security_info = data.get("securityInfo", {})
-
+            ticker = yf.Ticker(f"{symbol}.NS")
+            info = ticker.info
+            
             return {
                 "symbol": symbol,
-                "name": info.get("companyName", symbol),
-                "price": self._safe_float_parse(price_info.get("lastPrice")),
-                "change": self._safe_float_parse(price_info.get("change")),
-                "change_percent": self._safe_float_parse(price_info.get("pChange")),
-                "volume": self._safe_int_parse(price_info.get("totalTradedVolume")),
-                "market_cap": self._safe_float_parse(security_info.get("marketCapitalization")),
-                "pe_ratio": self._safe_float_parse(security_info.get("pe")),
-                "dividend_yield": self._safe_float_parse(security_info.get("dividendYield")),
-                "sector": security_info.get("industry", "Unknown"),
-                "open": self._safe_float_parse(price_info.get("open")),
-                "high": self._safe_float_parse(price_info.get("intraDayHighLow", {}).get("max")),
-                "low": self._safe_float_parse(price_info.get("intraDayHighLow", {}).get("min")),
-                "previous_close": self._safe_float_parse(price_info.get("previousClose")),
-                "last_updated": datetime.utcnow().isoformat()
+                "name": info.get("longName", symbol),
+                "lastPrice": f"{info.get('currentPrice', 0):,.2f}",
+                "pChange": f"{(info.get('currentPrice', 0) - info.get('previousClose', 0)) / info.get('previousClose', 1) * 100:+.2f}",
+                "otherDetails": {
+                    "open": info.get("open"),
+                    "high": info.get("dayHigh"),
+                    "low": info.get("dayLow"),
+                    "volume": info.get("volume"),
+                    "marketCap": info.get("marketCap"),
+                    "pe": info.get("trailingPE"),
+                    "sector": info.get("sector"),
+                    "chartToday": None
+                }
             }
-
         except Exception as e:
-            logger.error(f"Error fetching stock detail for {symbol}: {e}")
+            logger.error(f"Error fetching detail for {symbol}: {e}")
             return None
 
     async def calculate_fd_returns(
@@ -372,5 +253,5 @@ class NSEDataService:
 
     def __del__(self):
         """Cleanup session on destruction"""
-        if self.session:
-            self.session.close()
+        # No session to close with yfinance
+        pass

@@ -1,1 +1,258 @@
 2025-12-20 23:33:18,344 - httpx - INFO - HTTP Request: GET http://testserver/health "HTTP/1.1 200 OK"
+2025-12-20 23:51:23,342 - main - INFO - Starting Financer API...
+2025-12-20 23:51:23,342 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-20 23:51:23,342 - main - WARNING - Google API key not found
+2025-12-20 23:51:23,343 - database - INFO - Connected to in-memory database
+2025-12-20 23:51:23,343 - main - INFO - All services initialized successfully
+2025-12-20 23:52:07,923 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:52:09,530 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:52:09,530 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:52:09,530 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:52:09,530 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:52:10,908 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:52:10,915 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:52:10,916 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:53:02,700 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:53:04,024 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:53:04,024 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:53:04,025 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:53:04,142 - main - INFO - Shutting down Financer API...
+2025-12-20 23:53:04,142 - database - INFO - Disconnected from in-memory database
+2025-12-20 23:53:04,142 - main - INFO - Shutdown complete
+2025-12-20 23:53:40,993 - main - INFO - Starting Financer API...
+2025-12-20 23:53:40,993 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-20 23:53:40,993 - main - WARNING - Google API key not found
+2025-12-20 23:53:40,993 - database - INFO - Connected to in-memory database
+2025-12-20 23:53:40,993 - main - INFO - All services initialized successfully
+2025-12-20 23:53:43,428 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:53:43,581 - nse_data - ERROR - Session establishment failed: 403 Client Error: Forbidden for url: https://www.nseindia.com/
+2025-12-20 23:53:43,581 - main - ERROR - Stock data fetch failed: 503: Failed to establish NSE session
+2025-12-20 23:53:43,582 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:53:43,587 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:53:46,020 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:53:46,028 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:53:46,029 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:54:18,062 - main - INFO - Starting Financer API...
+2025-12-20 23:54:18,076 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-20 23:54:18,076 - main - WARNING - Google API key not found
+2025-12-20 23:54:18,076 - database - INFO - Connected to in-memory database
+2025-12-20 23:54:18,076 - main - INFO - All services initialized successfully
+2025-12-20 23:54:22,459 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:54:23,998 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:54:23,999 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:54:24,000 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:54:24,003 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:54:25,296 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:54:25,297 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:54:25,298 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:54:32,461 - main - INFO - Shutting down Financer API...
+2025-12-20 23:54:32,461 - database - INFO - Disconnected from in-memory database
+2025-12-20 23:54:32,461 - main - INFO - Shutdown complete
+2025-12-20 23:54:39,954 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:54:41,167 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:54:41,168 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:54:41,168 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:54:41,172 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:54:42,434 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:54:42,434 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:54:42,434 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:55:30,941 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:55:32,254 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:55:32,255 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:55:32,255 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:55:32,258 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:55:33,550 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:55:33,550 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:55:33,554 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:55:37,858 - main - INFO - Starting Financer API...
+2025-12-20 23:55:37,858 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-20 23:55:37,858 - main - WARNING - Google API key not found
+2025-12-20 23:55:37,858 - database - INFO - Connected to in-memory database
+2025-12-20 23:55:37,858 - main - INFO - All services initialized successfully
+2025-12-20 23:55:37,858 - main - INFO - Shutting down Financer API...
+2025-12-20 23:55:37,858 - database - INFO - Disconnected from in-memory database
+2025-12-20 23:55:37,858 - main - INFO - Shutdown complete
+2025-12-20 23:55:57,609 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:55:59,162 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:55:59,163 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:55:59,163 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:55:59,167 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:56:00,389 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:00,390 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:00,390 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:56:17,693 - main - INFO - Starting Financer API...
+2025-12-20 23:56:17,693 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-20 23:56:17,693 - main - WARNING - Google API key not found
+2025-12-20 23:56:17,693 - database - INFO - Connected to in-memory database
+2025-12-20 23:56:17,693 - main - INFO - All services initialized successfully
+2025-12-20 23:56:22,463 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:56:22,524 - nse_data - ERROR - Session establishment failed: 403 Client Error: Forbidden for url: https://www.nseindia.com/
+2025-12-20 23:56:22,525 - main - ERROR - Stock data fetch failed: 503: Failed to establish NSE session
+2025-12-20 23:56:22,525 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:56:22,531 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:56:24,952 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:24,953 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:24,953 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:56:24,957 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:56:26,221 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:26,222 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:26,222 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:56:26,227 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:56:27,558 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:27,561 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:27,562 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:56:27,564 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:56:28,899 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:28,900 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:28,901 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:56:28,907 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:56:30,161 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:30,164 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:56:30,165 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:56:59,638 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:57:01,208 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:57:01,209 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:57:01,213 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:57:01,226 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:57:02,546 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:57:02,546 - main - ERROR - Stock data fetch failed: 503: Unexpected error: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:57:02,550 - main - WARNING - HTTP 500: Failed to fetch stock data
+2025-12-20 23:57:14,748 - main - INFO - Shutting down Financer API...
+2025-12-20 23:57:14,748 - database - INFO - Disconnected from in-memory database
+2025-12-20 23:57:14,748 - main - INFO - Shutdown complete
+2025-12-20 23:57:31,286 - main - INFO - Starting Financer API...
+2025-12-20 23:57:31,286 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-20 23:57:31,286 - main - WARNING - Google API key not found
+2025-12-20 23:57:31,286 - database - INFO - Connected to in-memory database
+2025-12-20 23:57:31,286 - main - INFO - All services initialized successfully
+2025-12-20 23:57:36,870 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:57:38,419 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:57:38,419 - main - WARNING - NSE API error: Unexpected error: Expecting value: line 1 column 1 (char 0), serving mock data
+2025-12-20 23:57:38,424 - main - INFO - Serving cached stock data
+2025-12-20 23:58:02,752 - main - INFO - Serving cached stock data
+2025-12-20 23:58:02,767 - main - INFO - Serving cached stock data
+2025-12-20 23:58:05,237 - main - INFO - Serving cached stock data
+2025-12-20 23:58:05,238 - main - INFO - Serving cached stock data
+2025-12-20 23:58:48,997 - main - INFO - Fetching fresh stock data from NSE
+2025-12-20 23:58:50,670 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-20 23:58:50,670 - main - WARNING - NSE API error: Unexpected error: Expecting value: line 1 column 1 (char 0), serving mock data
+2025-12-20 23:58:50,670 - main - INFO - Serving cached stock data
+2025-12-21 00:00:44,125 - main - INFO - Fetching fresh stock data from NSE
+2025-12-21 00:00:45,714 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-21 00:00:45,715 - main - WARNING - NSE API error: Unexpected error: Expecting value: line 1 column 1 (char 0), serving mock data
+2025-12-21 00:00:45,719 - main - INFO - Serving cached stock data
+2025-12-21 00:00:45,722 - main - INFO - Serving cached stock data
+2025-12-21 00:00:45,726 - main - INFO - Serving cached stock data
+2025-12-21 00:01:02,143 - main - INFO - Serving cached stock data
+2025-12-21 00:01:02,147 - main - INFO - Serving cached stock data
+2025-12-21 00:01:56,942 - main - INFO - Starting Financer API...
+2025-12-21 00:01:56,942 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:01:56,942 - main - WARNING - Google API key not found
+2025-12-21 00:01:56,942 - database - INFO - Connected to in-memory database
+2025-12-21 00:01:56,942 - main - INFO - All services initialized successfully
+2025-12-21 00:01:56,942 - main - INFO - Shutting down Financer API...
+2025-12-21 00:01:56,942 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:01:56,942 - main - INFO - Shutdown complete
+2025-12-21 00:02:59,834 - main - INFO - Starting Financer API...
+2025-12-21 00:02:59,834 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:02:59,834 - main - WARNING - Google API key not found
+2025-12-21 00:02:59,834 - database - INFO - Connected to in-memory database
+2025-12-21 00:02:59,834 - main - INFO - All services initialized successfully
+2025-12-21 00:03:04,459 - main - INFO - Fetching fresh stock data from NSE
+2025-12-21 00:03:06,315 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-21 00:03:06,315 - main - WARNING - NSE API error: Unexpected error: Expecting value: line 1 column 1 (char 0), serving mock data
+2025-12-21 00:03:06,319 - main - INFO - Serving cached stock data
+2025-12-21 00:03:11,063 - main - INFO - Serving cached stock data
+2025-12-21 00:03:11,065 - main - INFO - Serving cached stock data
+2025-12-21 00:03:35,983 - main - INFO - Serving cached stock data
+2025-12-21 00:03:35,988 - main - INFO - Serving cached stock data
+2025-12-21 00:03:44,056 - main - INFO - Shutting down Financer API...
+2025-12-21 00:03:44,056 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:03:44,056 - main - INFO - Shutdown complete
+2025-12-21 00:03:46,139 - main - INFO - Starting Financer API...
+2025-12-21 00:03:46,140 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:03:46,140 - main - WARNING - Google API key not found
+2025-12-21 00:03:46,140 - database - INFO - Connected to in-memory database
+2025-12-21 00:03:46,140 - main - INFO - All services initialized successfully
+2025-12-21 00:03:52,128 - main - INFO - Starting Financer API...
+2025-12-21 00:03:52,128 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:03:52,128 - main - WARNING - Google API key not found
+2025-12-21 00:03:52,128 - database - INFO - Connected to in-memory database
+2025-12-21 00:03:52,129 - main - INFO - All services initialized successfully
+2025-12-21 00:03:58,103 - main - INFO - Fetching fresh stock data from NSE
+2025-12-21 00:03:59,548 - nse_data - ERROR - Unexpected error in get_stock_data: Expecting value: line 1 column 1 (char 0)
+2025-12-21 00:03:59,550 - main - WARNING - NSE API error: Unexpected error: Expecting value: line 1 column 1 (char 0), serving mock data
+2025-12-21 00:03:59,553 - main - INFO - Serving cached stock data
+2025-12-21 00:06:19,334 - main - INFO - Shutting down Financer API...
+2025-12-21 00:06:19,334 - main - INFO - Shutting down Financer API...
+2025-12-21 00:06:19,334 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:06:19,334 - main - INFO - Shutdown complete
+2025-12-21 00:06:19,334 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:06:19,334 - main - INFO - Shutdown complete
+2025-12-21 00:06:27,686 - main - INFO - Starting Financer API...
+2025-12-21 00:06:27,688 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:06:27,688 - main - WARNING - Google API key not found
+2025-12-21 00:06:27,688 - database - INFO - Connected to in-memory database
+2025-12-21 00:06:27,688 - main - INFO - All services initialized successfully
+2025-12-21 00:06:27,700 - main - INFO - Fetching fresh stock data from NSE
+2025-12-21 00:06:27,733 - main - INFO - Starting Financer API...
+2025-12-21 00:06:27,746 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:06:27,752 - main - WARNING - Google API key not found
+2025-12-21 00:06:27,755 - database - INFO - Connected to in-memory database
+2025-12-21 00:06:27,758 - main - INFO - All services initialized successfully
+2025-12-21 00:06:30,609 - main - INFO - Starting Financer API...
+2025-12-21 00:06:30,610 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:06:30,610 - main - WARNING - Google API key not found
+2025-12-21 00:06:30,610 - database - INFO - Connected to in-memory database
+2025-12-21 00:06:30,610 - main - INFO - All services initialized successfully
+2025-12-21 00:06:37,514 - main - INFO - Serving cached stock data
+2025-12-21 00:06:56,118 - main - INFO - Shutting down Financer API...
+2025-12-21 00:06:56,118 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:06:56,118 - main - INFO - Shutdown complete
+2025-12-21 00:07:02,083 - main - INFO - Serving cached stock data
+2025-12-21 00:07:02,087 - main - INFO - Serving cached stock data
+2025-12-21 00:07:22,597 - main - INFO - Shutting down Financer API...
+2025-12-21 00:07:22,597 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:07:22,597 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:07:22,597 - main - INFO - Shutdown complete
+2025-12-21 00:07:22,597 - main - INFO - Shutdown complete
+2025-12-21 00:07:25,285 - main - INFO - Starting Financer API...
+2025-12-21 00:07:25,285 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:07:25,286 - main - WARNING - Google API key not found
+2025-12-21 00:07:25,286 - database - INFO - Connected to in-memory database
+2025-12-21 00:07:25,286 - main - INFO - All services initialized successfully
+2025-12-21 00:07:25,286 - main - INFO - Starting Financer API...
+2025-12-21 00:07:25,286 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:07:25,286 - main - WARNING - Google API key not found
+2025-12-21 00:07:25,286 - database - INFO - Connected to in-memory database
+2025-12-21 00:07:25,286 - main - INFO - All services initialized successfully
+2025-12-21 00:08:01,912 - main - INFO - Starting Financer API...
+2025-12-21 00:08:01,912 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:08:01,912 - main - WARNING - Google API key not found
+2025-12-21 00:08:01,912 - database - INFO - Connected to in-memory database
+2025-12-21 00:08:01,912 - main - INFO - All services initialized successfully
+2025-12-21 00:08:04,113 - main - INFO - Fetching fresh stock data from NSE
+2025-12-21 00:08:06,313 - main - INFO - Serving cached stock data
+2025-12-21 00:08:54,726 - main - INFO - Serving cached stock data
+2025-12-21 00:08:54,731 - main - INFO - Serving cached stock data
+2025-12-21 00:09:34,127 - main - INFO - Serving cached stock data
+2025-12-21 00:09:34,139 - main - INFO - Serving cached stock data
+2025-12-21 00:09:54,307 - main - INFO - Shutting down Financer API...
+2025-12-21 00:09:54,307 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:09:54,307 - main - INFO - Shutdown complete
+2025-12-21 00:12:23,168 - main - INFO - Shutting down Financer API...
+2025-12-21 00:12:23,168 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:12:23,168 - main - INFO - Shutting down Financer API...
+2025-12-21 00:12:23,170 - database - INFO - Disconnected from in-memory database
+2025-12-21 00:12:23,170 - main - INFO - Shutdown complete
+2025-12-21 00:12:23,187 - main - INFO - Shutdown complete
+2025-12-21 00:12:26,702 - main - INFO - Starting Financer API...
+2025-12-21 00:12:26,711 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:12:26,711 - main - WARNING - Google API key not found
+2025-12-21 00:12:26,711 - main - INFO - Starting Financer API...
+2025-12-21 00:12:26,711 - database - INFO - Connected to in-memory database
+2025-12-21 00:12:26,711 - main - WARNING - Firebase credentials not found or already initialized
+2025-12-21 00:12:26,711 - main - INFO - All services initialized successfully
+2025-12-21 00:12:26,711 - main - WARNING - Google API key not found
+2025-12-21 00:12:26,711 - database - INFO - Connected to in-memory database
+2025-12-21 00:12:26,711 - main - INFO - All services initialized successfully

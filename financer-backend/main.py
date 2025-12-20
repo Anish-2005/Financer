@@ -49,33 +49,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Rate limiting
-limiter = Limiter(key_func=get_remote_address)
-app = FastAPI(
-    title="Financer API",
-    description="A comprehensive financial data and AI insights API",
-    version="2.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
-)
-
-# Add rate limiting middleware
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-app.add_middleware(SlowAPIMiddleware)
-
-# Security middleware
-app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])  # Configure for production
-
-# CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=os.getenv("ALLOWED_ORIGINS", "*").split(","),
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 # Initialize services
 cache_service = CacheService()
 db_service = DatabaseService()
@@ -139,8 +112,40 @@ async def lifespan(app: FastAPI):
     await db_service.disconnect()
     logger.info("Shutdown complete")
 
+# Rate limiting
+limiter = Limiter(key_func=get_remote_address)
+
 # Initialize FastAPI with lifespan
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="Financer API",
+    description="A comprehensive financial data and AI insights API",
+    version="2.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc",
+    lifespan=lifespan
+)
+
+# Add rate limiting middleware
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
+
+# Security middleware
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=["*"])  # Configure for production
+
+# CORS middleware - Allow frontend development server
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",  # Vite dev server
+        "http://127.0.0.1:5173",  # Alternative localhost
+        "http://localhost:3000",  # Alternative port
+        "http://127.0.0.1:3000",  # Alternative port
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Security
 security = HTTPBearer()
@@ -221,10 +226,221 @@ async def verify_token(current_user: dict = Depends(get_current_user)):
         "email_verified": current_user.get("email_verified", False)
     }
 
+async def get_mock_stock_data() -> Dict[str, Any]:
+    """Return mock stock data for development/testing"""
+    from datetime import datetime
+    import random
+
+    mock_stocks = [
+        {
+            "symbol": "RELIANCE",
+            "name": "Reliance Industries Limited",
+            "lastPrice": "2,850.50",
+            "pChange": "+1.25",
+            "otherDetails": {
+                "open": 2820.00,
+                "high": 2860.00,
+                "low": 2815.00,
+                "volume": 2500000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "TCS",
+            "name": "Tata Consultancy Services Limited",
+            "lastPrice": "3,420.75",
+            "pChange": "-0.85",
+            "otherDetails": {
+                "open": 3450.00,
+                "high": 3465.00,
+                "low": 3410.00,
+                "volume": 1800000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "HDFCBANK",
+            "name": "HDFC Bank Limited",
+            "lastPrice": "1,650.25",
+            "pChange": "+0.95",
+            "otherDetails": {
+                "open": 1635.00,
+                "high": 1660.00,
+                "low": 1630.00,
+                "volume": 3200000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "ICICIBANK",
+            "name": "ICICI Bank Limited",
+            "lastPrice": "1,125.80",
+            "pChange": "-1.15",
+            "otherDetails": {
+                "open": 1140.00,
+                "high": 1145.00,
+                "low": 1120.00,
+                "volume": 4100000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "INFY",
+            "name": "Infosys Limited",
+            "lastPrice": "1,725.40",
+            "pChange": "+2.10",
+            "otherDetails": {
+                "open": 1690.00,
+                "high": 1730.00,
+                "low": 1685.00,
+                "volume": 2200000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "HINDUNILVR",
+            "name": "Hindustan Unilever Limited",
+            "lastPrice": "2,480.60",
+            "pChange": "+0.75",
+            "otherDetails": {
+                "open": 2465.00,
+                "high": 2490.00,
+                "low": 2460.00,
+                "volume": 950000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "ITC",
+            "name": "ITC Limited",
+            "lastPrice": "445.20",
+            "pChange": "+0.45",
+            "otherDetails": {
+                "open": 442.00,
+                "high": 448.00,
+                "low": 440.00,
+                "volume": 8500000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "SBIN",
+            "name": "State Bank of India",
+            "lastPrice": "612.40",
+            "pChange": "-0.30",
+            "otherDetails": {
+                "open": 615.00,
+                "high": 618.00,
+                "low": 610.00,
+                "volume": 12000000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "BHARTIARTL",
+            "name": "Bharti Airtel Limited",
+            "lastPrice": "985.50",
+            "pChange": "+1.10",
+            "otherDetails": {
+                "open": 975.00,
+                "high": 990.00,
+                "low": 970.00,
+                "volume": 4500000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "KOTAKBANK",
+            "name": "Kotak Mahindra Bank Limited",
+            "lastPrice": "1,820.15",
+            "pChange": "-0.55",
+            "otherDetails": {
+                "open": 1835.00,
+                "high": 1840.00,
+                "low": 1815.00,
+                "volume": 1500000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "LT",
+            "name": "Larsen & Toubro Limited",
+            "lastPrice": "3,150.80",
+            "pChange": "+1.85",
+            "otherDetails": {
+                "open": 3100.00,
+                "high": 3170.00,
+                "low": 3090.00,
+                "volume": 1100000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "AXISBANK",
+            "name": "Axis Bank Limited",
+            "lastPrice": "1,050.25",
+            "pChange": "+0.60",
+            "otherDetails": {
+                "open": 1045.00,
+                "high": 1060.00,
+                "low": 1040.00,
+                "volume": 3800000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "ASIANPAINT",
+            "name": "Asian Paints Limited",
+            "lastPrice": "3,240.50",
+            "pChange": "-1.20",
+            "otherDetails": {
+                "open": 3280.00,
+                "high": 3290.00,
+                "low": 3230.00,
+                "volume": 650000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "MARUTI",
+            "name": "Maruti Suzuki India Limited",
+            "lastPrice": "10,450.00",
+            "pChange": "+0.90",
+            "otherDetails": {
+                "open": 10380.00,
+                "high": 10500.00,
+                "low": 10350.00,
+                "volume": 420000,
+                "chartToday": None
+            }
+        },
+        {
+            "symbol": "TITAN",
+            "name": "Titan Company Limited",
+            "lastPrice": "3,580.75",
+            "pChange": "+1.50",
+            "otherDetails": {
+                "open": 3540.00,
+                "high": 3600.00,
+                "low": 3530.00,
+                "volume": 780000,
+                "chartToday": None
+            }
+        }
+    ]
+
+    return {
+        "data": mock_stocks,
+        "error": None,
+        "timestamp": datetime.utcnow().isoformat(),
+        "total_count": len(mock_stocks),
+        "source": "mock_data"
+    }
+
 @app.get("/stocks", response_model=Dict[str, Any])
 @limiter.limit("30/minute")
 async def get_stocks(request: Request, background_tasks: BackgroundTasks):
-    """Get NSE stock data with caching"""
+    """Get NSE stock data with caching - fallback to mock data"""
     try:
         # Check cache first
         cache_key = "nse_stocks_data"
@@ -234,16 +450,17 @@ async def get_stocks(request: Request, background_tasks: BackgroundTasks):
             logger.info("Serving cached stock data")
             return cached_data
 
-        # Fetch fresh data
+        # Try to fetch fresh data
         logger.info("Fetching fresh stock data from NSE")
         result = await nse_service.get_stock_data()
 
         if result["error"]:
-            # Return cached data if available, otherwise error
-            if cached_data:
-                logger.warning(f"NSE API error, serving cached data: {result['error']}")
-                return cached_data
-            raise HTTPException(status_code=503, detail=result["error"])
+            # Return mock data if NSE fails
+            logger.warning(f"NSE API error: {result['error']}, serving mock data")
+            mock_data = await get_mock_stock_data()
+            # Cache mock data for shorter time
+            await cache_service.set(cache_key, mock_data, ttl=60)  # 1 minute
+            return mock_data
 
         # Cache the result
         await cache_service.set(cache_key, result, ttl=300)  # 5 minutes
@@ -255,7 +472,9 @@ async def get_stocks(request: Request, background_tasks: BackgroundTasks):
 
     except Exception as e:
         logger.error(f"Stock data fetch failed: {e}")
-        raise HTTPException(status_code=500, detail="Failed to fetch stock data")
+        # Return mock data as fallback
+        logger.info("Serving mock stock data due to error")
+        return await get_mock_stock_data()
 
 @app.get("/stocks/{symbol}", response_model=StockData)
 @limiter.limit("60/minute")
