@@ -21,6 +21,7 @@ const StocksPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedStock, setSelectedStock] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchStocks = async () => {
@@ -226,36 +227,99 @@ const StocksPage = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stocks.map((stock, index) => (
+          {/* Search and Filter */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-12"
+          >
+            <div className="max-w-md mx-auto">
+              <div className="relative">
+                <Search className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors ${
+                  isDark ? 'text-slate-400' : 'text-slate-500'
+                }`} />
+                <input
+                  type="text"
+                  placeholder="Search stocks..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={`w-full pl-12 pr-4 py-4 rounded-xl border transition-all ${
+                    isDark
+                      ? 'bg-slate-800/50 border-slate-600 text-white placeholder-slate-400 focus:border-emerald-400'
+                      : 'bg-white/50 border-slate-300 text-slate-900 placeholder-slate-500 focus:border-emerald-500'
+                  } focus:ring-2 focus:ring-emerald-400/20`}
+                />
+              </div>
+            </div>
+          </motion.div>
+
+          {(() => {
+            const filteredStocks = stocks.filter(stock =>
+              stock.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              stock.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            return (
+              <>
+                {filteredStocks.length === 0 ? (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className={`backdrop-blur-sm rounded-2xl p-12 text-center transition-colors ${
+                      isDark
+                        ? 'bg-slate-800/40 border border-slate-700/50'
+                        : 'bg-white/40 border border-slate-200/50'
+                    }`}
+                  >
+                    <div className="p-4 rounded-xl bg-gradient-to-br from-slate-500 to-gray-600 w-fit mx-auto mb-4">
+                      <Search className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className={`text-xl font-bold mb-2 transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>No stocks found</h3>
+                    <p className={`transition-colors ${
+                      isDark ? 'text-slate-400' : 'text-slate-600'
+                    }`}>
+                      Try adjusting your search terms
+                    </p>
+                  </motion.div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {filteredStocks.map((stock, index) => (
               <motion.div
                 key={stock.symbol}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
+                whileHover={{ scale: 1.02, y: -4 }}
                 onClick={() => setSelectedStock(stock)}
                 className={`group relative backdrop-blur-sm rounded-2xl p-6 cursor-pointer overflow-hidden transition-all duration-300 ${
                   isDark
-                    ? 'bg-slate-800/40 border border-slate-700/50 hover:border-slate-600'
-                    : 'bg-white/40 border border-slate-200/50 hover:border-slate-300'
+                    ? 'bg-slate-800/30 border border-slate-700/50 hover:border-slate-600'
+                    : 'bg-white/30 border border-slate-200/50 hover:border-slate-300'
                 }`}
               >
                 {/* Gradient Background on Hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                 <div className="relative z-10">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h2 className={`text-xl font-bold transition-colors ${
-                        isDark ? 'text-white' : 'text-slate-900'
-                      }`}>{stock.symbol}</h2>
-                      <p className={`text-sm transition-colors ${
-                        isDark ? 'text-slate-400' : 'text-slate-600'
-                      }`}>{stock.name}</p>
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                        <BarChart3 className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className={`text-lg font-bold transition-colors ${
+                          isDark ? 'text-white' : 'text-slate-900'
+                        }`}>{stock.symbol}</h3>
+                        <p className={`text-sm transition-colors ${
+                          isDark ? 'text-slate-400' : 'text-slate-600'
+                        }`}>{stock.name.length > 20 ? `${stock.name.substring(0, 20)}...` : stock.name}</p>
+                      </div>
                     </div>
-                    <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-sm font-medium ${
+                    <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${
                       stock.pChange.startsWith('+')
                         ? 'bg-emerald-500/20 text-emerald-400'
                         : stock.pChange === 'N/A'
@@ -263,29 +327,29 @@ const StocksPage = () => {
                         : 'bg-red-500/20 text-red-400'
                     }`}>
                       {stock.pChange.startsWith('+') ? (
-                        <TrendingUp className="w-3 h-3" />
+                        <TrendingUp className="w-4 h-4" />
                       ) : stock.pChange === 'N/A' ? (
-                        <Activity className="w-3 h-3" />
+                        <Activity className="w-4 h-4" />
                       ) : (
-                        <TrendingDown className="w-3 h-3" />
+                        <TrendingDown className="w-4 h-4" />
                       )}
                       {stock.pChange}
                     </div>
                   </div>
 
                   <div className="mb-4">
-                    <p className={`text-3xl font-bold transition-colors ${
+                    <p className={`text-2xl font-bold mb-2 transition-colors ${
                       isDark ? 'text-white' : 'text-slate-900'
                     }`}>
                       {stock.lastPrice}
                     </p>
-                    <div className={`h-1 rounded-full mt-2 transition-colors ${
+                    <div className={`h-2 rounded-full transition-colors ${
                       isDark ? 'bg-slate-700' : 'bg-slate-200'
                     }`}>
                       <div
                         className={`h-full rounded-full transition-all duration-500 ${
-                          stock.pChange.startsWith('+') ? 'bg-emerald-400' :
-                          stock.pChange === 'N/A' ? 'bg-slate-400' : 'bg-red-400'
+                          stock.pChange.startsWith('+') ? 'bg-gradient-to-r from-emerald-400 to-emerald-500' :
+                          stock.pChange === 'N/A' ? 'bg-gradient-to-r from-slate-400 to-slate-500' : 'bg-gradient-to-r from-red-400 to-red-500'
                         }`}
                         style={{
                           width: `${Math.min(
@@ -299,24 +363,23 @@ const StocksPage = () => {
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-emerald-400 font-semibold group-hover:gap-3 transition-all">
-                      <span>View Details</span>
-                      <motion.div
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5 }}
-                      >
-                        <ArrowRight className="w-5 h-5" />
-                      </motion.div>
+                      <Eye className="w-4 h-4" />
+                      <span className="text-sm">View Details</span>
                     </div>
-                    <div className={`text-sm transition-colors ${
+                    <div className={`text-xs transition-colors ${
                       isDark ? 'text-slate-400' : 'text-slate-600'
                     }`}>
-                      Vol: {stock.otherDetails.volume?.toLocaleString() || 'N/A'}
+                      Vol: {stock.otherDetails.volume ? (stock.otherDetails.volume / 1000000).toFixed(1) + 'M' : 'N/A'}
                     </div>
                   </div>
                 </div>
               </motion.div>
             ))}
-          </div>
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       )}
 
@@ -326,28 +389,34 @@ const StocksPage = () => {
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className={`backdrop-blur-xl rounded-3xl p-8 max-w-4xl w-full transition-colors ${
+            exit={{ scale: 0.95, opacity: 0 }}
+            className={`backdrop-blur-xl rounded-3xl p-8 max-w-5xl w-full max-h-[90vh] overflow-y-auto transition-colors ${
               isDark
-                ? 'bg-slate-800/90 border border-slate-700/50'
-                : 'bg-white/90 border border-slate-200/50'
+                ? 'bg-slate-800/95 border border-slate-700/50'
+                : 'bg-white/95 border border-slate-200/50'
             }`}
           >
             <div className="flex justify-between items-start mb-8">
-              <div>
-                <h2 className={`text-4xl font-bold mb-2 transition-colors ${
-                  isDark ? 'text-white' : 'text-slate-900'
-                }`}>
-                  {selectedStock.symbol}
-                </h2>
-                <p className={`text-lg transition-colors ${
-                  isDark ? 'text-slate-400' : 'text-slate-600'
-                }`}>{selectedStock.name}</p>
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                  <BarChart3 className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h2 className={`text-3xl font-bold transition-colors ${
+                    isDark ? 'text-white' : 'text-slate-900'
+                  }`}>
+                    {selectedStock.symbol}
+                  </h2>
+                  <p className={`text-lg transition-colors ${
+                    isDark ? 'text-slate-400' : 'text-slate-600'
+                  }`}>{selectedStock.name}</p>
+                </div>
               </div>
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setSelectedStock(null)}
-                className={`p-2 rounded-full transition-colors ${
+                className={`p-3 rounded-xl transition-colors ${
                   isDark
                     ? 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 hover:text-white'
                     : 'bg-slate-200/50 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
@@ -357,28 +426,40 @@ const StocksPage = () => {
               </motion.button>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid lg:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <div className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
-                  isDark
-                    ? 'bg-slate-700/30 border border-slate-600/50'
-                    : 'bg-slate-50/50 border border-slate-200/50'
-                }`}>
-                  <h3 className={`text-xl font-bold mb-4 transition-colors ${
-                    isDark ? 'text-white' : 'text-slate-900'
-                  }`}>Price Details</h3>
+                {/* Price Details Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
+                    isDark
+                      ? 'bg-slate-800/40 border border-slate-700/50'
+                      : 'bg-white/40 border border-slate-200/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+                      <TrendingUp className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className={`text-xl font-bold transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>Price Details</h3>
+                  </div>
                   <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className={`transition-colors ${
-                        isDark ? 'text-slate-400' : 'text-slate-600'
+                    <div className="flex justify-between items-center p-4 rounded-xl bg-gradient-to-r from-emerald-500/10 to-blue-500/10">
+                      <span className={`font-medium transition-colors ${
+                        isDark ? 'text-slate-300' : 'text-slate-700'
                       }`}>Current Price</span>
                       <p className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
                         {selectedStock.lastPrice}
                       </p>
                     </div>
-                    <div className="flex justify-between items-center">
-                      <span className={`transition-colors ${
-                        isDark ? 'text-slate-400' : 'text-slate-600'
+                    <div className={`flex justify-between items-center p-4 rounded-xl transition-colors ${
+                      isDark ? 'bg-slate-700/30' : 'bg-slate-50/50'
+                    }`}>
+                      <span className={`font-medium transition-colors ${
+                        isDark ? 'text-slate-300' : 'text-slate-700'
                       }`}>Daily Change</span>
                       <p className={`text-2xl font-bold ${
                         selectedStock.pChange.startsWith('+') ? 'text-emerald-400' :
@@ -388,70 +469,132 @@ const StocksPage = () => {
                       </p>
                     </div>
                   </div>
-                </div>
+                </motion.div>
+
+                {/* Trading Details Card */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
+                    isDark
+                      ? 'bg-slate-800/40 border border-slate-700/50'
+                      : 'bg-white/40 border border-slate-200/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600">
+                      <Activity className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className={`text-xl font-bold transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>Trading Details</h3>
+                  </div>
+                  <div className="space-y-3">
+                    {[
+                      { label: 'Open', value: `₹${selectedStock.otherDetails.open?.toFixed(2) || 'N/A'}`, color: 'text-blue-400' },
+                      { label: 'High', value: `₹${selectedStock.otherDetails.high?.toFixed(2) || 'N/A'}`, color: 'text-emerald-400' },
+                      { label: 'Low', value: `₹${selectedStock.otherDetails.low?.toFixed(2) || 'N/A'}`, color: 'text-red-400' },
+                      { label: 'Volume', value: selectedStock.otherDetails.volume?.toLocaleString() || 'N/A', color: 'text-purple-400' }
+                    ].map((item, index) => (
+                      <div key={index} className={`flex justify-between items-center p-3 rounded-xl transition-colors ${
+                        isDark ? 'bg-slate-700/30' : 'bg-slate-50/50'
+                      }`}>
+                        <span className={`font-medium transition-colors ${
+                          isDark ? 'text-slate-300' : 'text-slate-700'
+                        }`}>{item.label}</span>
+                        <span className={`font-semibold ${item.color}`}>
+                          {item.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
               </div>
 
               <div className="space-y-6">
-                <div className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
-                  isDark
-                    ? 'bg-slate-700/30 border border-slate-600/50'
-                    : 'bg-slate-50/50 border border-slate-200/50'
-                }`}>
-                  <h3 className={`text-xl font-bold mb-4 transition-colors ${
-                    isDark ? 'text-white' : 'text-slate-900'
-                  }`}>Trading Details</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className={`transition-colors ${
-                        isDark ? 'text-slate-400' : 'text-slate-600'
-                      }`}>Open</span>
-                      <span className="text-blue-400 font-semibold">
-                        ₹{selectedStock.otherDetails.open?.toFixed(2) || 'N/A'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className={`transition-colors ${
-                        isDark ? 'text-slate-400' : 'text-slate-600'
-                      }`}>High</span>
-                      <span className="text-emerald-400 font-semibold">
-                        ₹{selectedStock.otherDetails.high?.toFixed(2) || 'N/A'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className={`transition-colors ${
-                        isDark ? 'text-slate-400' : 'text-slate-600'
-                      }`}>Low</span>
-                      <span className="text-red-400 font-semibold">
-                        ₹{selectedStock.otherDetails.low?.toFixed(2) || 'N/A'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className={`transition-colors ${
-                        isDark ? 'text-slate-400' : 'text-slate-600'
-                      }`}>Volume</span>
-                      <span className="text-purple-400 font-semibold">
-                        {selectedStock.otherDetails.volume?.toLocaleString() || 'N/A'}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
+                {/* Chart Card */}
                 {selectedStock.chartToday && (
-                  <div className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
-                    isDark
-                      ? 'bg-slate-700/30 border border-slate-600/50'
-                      : 'bg-slate-50/50 border border-slate-200/50'
-                  }`}>
-                    <h3 className={`text-xl font-bold mb-4 transition-colors ${
-                      isDark ? 'text-white' : 'text-slate-900'
-                    }`}>Price Movement</h3>
-                    <img
-                      src={selectedStock.chartToday}
-                      alt="Price Chart"
-                      className="w-full h-32 object-contain rounded-lg"
-                    />
-                  </div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
+                      isDark
+                        ? 'bg-slate-800/40 border border-slate-700/50'
+                        : 'bg-white/40 border border-slate-200/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-2 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600">
+                        <BarChart3 className="w-5 h-5 text-white" />
+                      </div>
+                      <h3 className={`text-xl font-bold transition-colors ${
+                        isDark ? 'text-white' : 'text-slate-900'
+                      }`}>Price Movement</h3>
+                    </div>
+                    <div className={`p-4 rounded-xl transition-colors ${
+                      isDark ? 'bg-slate-700/30' : 'bg-slate-50/50'
+                    }`}>
+                      <img
+                        src={selectedStock.chartToday}
+                        alt="Price Chart"
+                        className="w-full h-48 object-contain rounded-lg"
+                      />
+                    </div>
+                  </motion.div>
                 )}
+
+                {/* Performance Indicator */}
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className={`backdrop-blur-sm rounded-2xl p-6 transition-colors ${
+                    isDark
+                      ? 'bg-slate-800/40 border border-slate-700/50'
+                      : 'bg-white/40 border border-slate-200/50'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="p-2 rounded-xl bg-gradient-to-br from-orange-500 to-red-600">
+                      <Star className="w-5 h-5 text-white" />
+                    </div>
+                    <h3 className={`text-xl font-bold transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>Performance</h3>
+                  </div>
+                  <div className="space-y-4">
+                    <div className={`p-4 rounded-xl transition-colors ${
+                      selectedStock.pChange.startsWith('+')
+                        ? 'bg-emerald-500/10 border border-emerald-500/20'
+                        : selectedStock.pChange === 'N/A'
+                        ? 'bg-slate-500/10 border border-slate-500/20'
+                        : 'bg-red-500/10 border border-red-500/20'
+                    }`}>
+                      <div className="flex items-center justify-between">
+                        <span className={`font-medium transition-colors ${
+                          isDark ? 'text-slate-300' : 'text-slate-700'
+                        }`}>Trend</span>
+                        <div className="flex items-center gap-2">
+                          {selectedStock.pChange.startsWith('+') ? (
+                            <TrendingUp className="w-5 h-5 text-emerald-400" />
+                          ) : selectedStock.pChange === 'N/A' ? (
+                            <Activity className="w-5 h-5 text-slate-400" />
+                          ) : (
+                            <TrendingDown className="w-5 h-5 text-red-400" />
+                          )}
+                          <span className={`font-bold ${
+                            selectedStock.pChange.startsWith('+') ? 'text-emerald-400' :
+                            selectedStock.pChange === 'N/A' ? 'text-slate-400' : 'text-red-400'
+                          }`}>
+                            {selectedStock.pChange.startsWith('+') ? 'Bullish' :
+                             selectedStock.pChange === 'N/A' ? 'Neutral' : 'Bearish'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </div>
           </motion.div>
