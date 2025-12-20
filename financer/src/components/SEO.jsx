@@ -1,5 +1,4 @@
-import React from 'react';
-import { Helmet } from 'react-helmet';
+import { useEffect } from 'react';
 
 const SEO = ({
   title,
@@ -21,79 +20,60 @@ const SEO = ({
   const metaDescription = description || defaultDescription;
   const metaKeywords = keywords || defaultKeywords;
   const metaImage = image || defaultImage;
-  const metaUrl = url || window.location.href;
+  const metaUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
 
-  return (
-    <Helmet>
-      {/* Basic Meta Tags */}
-      <title>{metaTitle}</title>
-      <meta name="description" content={metaDescription} />
-      <meta name="keywords" content={metaKeywords} />
-      <meta name="author" content={author} />
-      <meta name="robots" content="index, follow" />
-      <meta name="language" content="English" />
-      <meta name="revisit-after" content="7 days" />
+  useEffect(() => {
+    // Update document title
+    document.title = metaTitle;
 
-      {/* Open Graph Tags */}
-      <meta property="og:title" content={metaTitle} />
-      <meta property="og:description" content={metaDescription} />
-      <meta property="og:image" content={metaImage} />
-      <meta property="og:url" content={metaUrl} />
-      <meta property="og:type" content={type} />
-      <meta property="og:site_name" content={siteName} />
+    // Helper function to update or create meta tag
+    const updateMetaTag = (name, content, property = false) => {
+      const attribute = property ? 'property' : 'name';
+      let element = document.querySelector(`meta[${attribute}="${name}"]`);
 
-      {/* Twitter Card Tags */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={metaTitle} />
-      <meta name="twitter:description" content={metaDescription} />
-      <meta name="twitter:image" content={metaImage} />
+      if (element) {
+        element.setAttribute('content', content);
+      } else {
+        element = document.createElement('meta');
+        element.setAttribute(attribute, name);
+        element.setAttribute('content', content);
+        document.head.appendChild(element);
+      }
+    };
 
-      {/* Article Specific Tags */}
-      {type === 'article' && published && (
-        <meta property="article:published_time" content={published} />
-      )}
-      {type === 'article' && modified && (
-        <meta property="article:modified_time" content={modified} />
-      )}
-      {type === 'article' && (
-        <meta property="article:author" content={author} />
-      )}
+    // Basic Meta Tags
+    updateMetaTag('description', metaDescription);
+    updateMetaTag('keywords', metaKeywords);
+    updateMetaTag('author', author);
+    updateMetaTag('robots', 'index, follow');
+    updateMetaTag('language', 'English');
+    updateMetaTag('revisit-after', '7 days');
 
-      {/* Additional SEO Tags */}
-      <meta name="theme-color" content="#10b981" />
-      <meta name="msapplication-TileColor" content="#10b981" />
-      <link rel="canonical" href={metaUrl} />
+    // Open Graph Tags
+    updateMetaTag('og:title', metaTitle, true);
+    updateMetaTag('og:description', metaDescription, true);
+    updateMetaTag('og:image', metaImage, true);
+    updateMetaTag('og:url', metaUrl, true);
+    updateMetaTag('og:type', type, true);
+    updateMetaTag('og:site_name', siteName, true);
 
-      {/* Structured Data */}
-      <script type="application/ld+json">
-        {JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebApplication",
-          "name": siteName,
-          "description": metaDescription,
-          "url": metaUrl,
-          "applicationCategory": "FinanceApplication",
-          "operatingSystem": "Web Browser",
-          "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD"
-          },
-          "creator": {
-            "@type": "Organization",
-            "name": "Financer"
-          },
-          "featureList": [
-            "AI Financial Advisor",
-            "Real-time Stock Tracking",
-            "Smart Expense Management",
-            "Portfolio Optimization",
-            "Fixed Deposit Calculator"
-          ]
-        })}
-      </script>
-    </Helmet>
-  );
+    // Twitter Card Tags
+    updateMetaTag('twitter:card', 'summary_large_image');
+    updateMetaTag('twitter:title', metaTitle);
+    updateMetaTag('twitter:description', metaDescription);
+    updateMetaTag('twitter:image', metaImage);
+
+    // Additional tags if provided
+    if (published) {
+      updateMetaTag('article:published_time', published, true);
+    }
+    if (modified) {
+      updateMetaTag('article:modified_time', modified, true);
+    }
+
+  }, [metaTitle, metaDescription, metaKeywords, author, metaImage, metaUrl, type, siteName, published, modified]);
+
+  return null; // This component doesn't render anything
 };
 
 export default SEO;
