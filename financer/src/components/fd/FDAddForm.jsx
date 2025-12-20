@@ -14,26 +14,26 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
   const { isDark } = useTheme();
 
   return (
-    <div className="relative z-10 container mx-auto max-w-7xl px-4 py-20">
+    <div className="relative z-10 container mx-auto max-w-7xl px-4 py-16 sm:py-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className={`backdrop-blur-xl rounded-3xl p-8 transition-colors ${
+        className={`backdrop-blur-xl rounded-3xl p-4 sm:p-6 md:p-8 transition-colors ${
           isDark
             ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50'
             : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
         }`}
       >
-        <div className="text-center mb-10">
+        <div className="text-center mb-6 sm:mb-10">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             whileInView={{ scale: 1, opacity: 1 }}
-            className="inline-flex px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4"
+            className="inline-flex px-3 sm:px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4"
           >
             <span className="text-blue-400 font-semibold text-sm">Add Investment</span>
           </motion.div>
-          <h3 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors ${
+          <h3 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-4 transition-colors ${
             isDark ? 'text-white' : 'text-slate-900'
           }`}>
             Create New{' '}
@@ -41,27 +41,27 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
               Fixed Deposit
             </span>
           </h3>
-          <p className={`text-lg max-w-2xl mx-auto transition-colors ${
+          <p className={`text-base sm:text-lg max-w-2xl mx-auto transition-colors px-4 sm:px-0 ${
             isDark ? 'text-slate-400' : 'text-slate-600'
           }`}>
             Enter the details below to track your fixed deposit investment
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
           {/* Bank Name */}
           <div className="space-y-2">
             <label className={`text-sm font-medium transition-colors ${
               isDark ? 'text-slate-300' : 'text-slate-700'
             }`}>Bank Name</label>
             <div className="relative group">
-              <PiggyBank className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors ${
+              <PiggyBank className={`absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 transition-colors ${
                 isDark ? 'text-slate-400 group-focus-within:text-blue-400' : 'text-slate-500 group-focus-within:text-blue-500'
               }`} />
               <select
                 value={newFd.bank}
                 onChange={(e) => setNewFd({ ...newFd, bank: e.target.value })}
-                className={`w-full pl-12 pr-4 py-4 rounded-2xl border outline-none transition-all ${
+                className={`w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-2xl border outline-none transition-all text-sm sm:text-base ${
                   isDark
                     ? 'bg-slate-800/50 border-slate-600 text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20'
                     : 'bg-white/50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
@@ -81,7 +81,7 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
               isDark ? 'text-slate-300' : 'text-slate-700'
             }`}>Investment Amount</label>
             <div className="relative group">
-              <IndianRupee className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors ${
+              <IndianRupee className={`absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 transition-colors ${
                 isDark ? 'text-slate-400 group-focus-within:text-blue-400' : 'text-slate-500 group-focus-within:text-blue-500'
               }`} />
               <input
@@ -89,7 +89,7 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
                 placeholder="Enter amount"
                 value={newFd.amount}
                 onChange={(e) => setNewFd({ ...newFd, amount: e.target.value })}
-                className={`w-full pl-12 pr-4 py-4 rounded-2xl border outline-none transition-all ${
+                className={`w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-2xl border outline-none transition-all text-sm sm:text-base ${
                   isDark
                     ? 'bg-slate-800/50 border-slate-600 text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 placeholder-slate-500'
                     : 'bg-white/50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400'
@@ -104,7 +104,7 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
               isDark ? 'text-slate-300' : 'text-slate-700'
             }`}>Interest Rate (%)</label>
             <div className="relative group">
-              <Percent className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors ${
+              <Percent className={`absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 transition-colors ${
                 isDark ? 'text-slate-400 group-focus-within:text-blue-400' : 'text-slate-500 group-focus-within:text-blue-500'
               }`} />
               <input
@@ -113,7 +113,7 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
                 placeholder="e.g., 6.5"
                 value={newFd.rate}
                 onChange={(e) => setNewFd({ ...newFd, rate: e.target.value })}
-                className={`w-full pl-12 pr-4 py-4 rounded-2xl border outline-none transition-all ${
+                className={`w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-2xl border outline-none transition-all text-sm sm:text-base ${
                   isDark
                     ? 'bg-slate-800/50 border-slate-600 text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 placeholder-slate-500'
                     : 'bg-white/50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400'
@@ -128,7 +128,7 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
               isDark ? 'text-slate-300' : 'text-slate-700'
             }`}>Tenure (Months)</label>
             <div className="relative group">
-              <Clock className={`absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 transition-colors ${
+              <Clock className={`absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 transition-colors ${
                 isDark ? 'text-slate-400 group-focus-within:text-blue-400' : 'text-slate-500 group-focus-within:text-blue-500'
               }`} />
               <input
@@ -136,7 +136,7 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
                 placeholder="e.g., 12"
                 value={newFd.tenure}
                 onChange={(e) => setNewFd({ ...newFd, tenure: e.target.value })}
-                className={`w-full pl-12 pr-4 py-4 rounded-2xl border outline-none transition-all ${
+                className={`w-full pl-10 sm:pl-12 pr-4 py-3 sm:py-4 rounded-2xl border outline-none transition-all text-sm sm:text-base ${
                   isDark
                     ? 'bg-slate-800/50 border-slate-600 text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 placeholder-slate-500'
                     : 'bg-white/50 border-slate-300 text-slate-900 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 placeholder-slate-400'
@@ -174,13 +174,13 @@ const FDAddForm = ({ newFd, setNewFd, handleAddFD, banks }) => {
               whileTap={{ scale: 0.98 }}
               onClick={handleAddFD}
               disabled={!Object.values(newFd).every(Boolean)}
-              className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-lg ${
+              className={`w-full py-3 sm:py-4 px-6 rounded-2xl font-semibold text-sm sm:text-base transition-all flex items-center justify-center gap-2 shadow-lg ${
                 Object.values(newFd).every(Boolean)
                   ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 shadow-blue-500/25'
                   : 'bg-slate-200 text-slate-400 dark:bg-slate-800 dark:text-slate-600 cursor-not-allowed'
               }`}
             >
-              <Plus className="w-5 h-5" />
+              <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
               Add FD
             </motion.button>
           </div>
