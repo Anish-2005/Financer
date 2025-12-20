@@ -20,24 +20,24 @@ const HomeBenefits = () => {
   ];
 
   return (
-    <div className="relative z-10 container mx-auto max-w-7xl px-4 py-20">
+    <div className="relative z-10 container mx-auto max-w-7xl px-4 py-16 sm:py-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className={`backdrop-blur-xl rounded-3xl p-12 transition-colors ${
+        className={`backdrop-blur-xl rounded-3xl p-6 sm:p-8 md:p-12 transition-colors ${
           isDark
             ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50'
             : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
         }`}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center">
           {/* Left Column */}
-          <div className="space-y-6">
-            <div className="inline-flex px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="inline-flex px-3 sm:px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
               <span className="text-emerald-400 font-semibold text-sm">Why Choose Financer</span>
             </div>
-            <h3 className={`text-4xl md:text-5xl font-bold leading-tight transition-colors ${
+            <h3 className={`text-3xl sm:text-4xl md:text-5xl font-bold leading-tight transition-colors ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
               Smart Analytics,
@@ -46,7 +46,7 @@ const HomeBenefits = () => {
                 Smarter Decisions
               </span>
             </h3>
-            <p className={`text-lg leading-relaxed transition-colors ${
+            <p className={`text-base sm:text-lg leading-relaxed transition-colors ${
               isDark ? 'text-slate-400' : 'text-slate-600'
             }`}>
               Our AI-powered platform analyzes your financial data to deliver actionable insights,
@@ -54,22 +54,22 @@ const HomeBenefits = () => {
             </p>
 
             {/* Benefits Grid */}
-            <div className="grid grid-cols-2 gap-4 pt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4 pt-4">
               {benefits.map((benefit, index) => (
                 <motion.div
                   key={index}
                   whileHover={{ scale: 1.05 }}
-                  className={`rounded-xl p-4 transition-colors ${
+                  className={`rounded-xl p-3 sm:p-4 transition-colors ${
                     isDark
                       ? 'bg-slate-800/50 border border-slate-700/50'
                       : 'bg-white/50 border border-slate-200/50'
                   }`}
                 >
-                  <benefit.icon className="w-8 h-8 text-emerald-400 mb-2" />
-                  <div className={`font-semibold transition-colors ${
+                  <benefit.icon className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-400 mb-2" />
+                  <div className={`font-semibold text-sm sm:text-base transition-colors ${
                     isDark ? 'text-white' : 'text-slate-900'
                   }`}>{benefit.title}</div>
-                  <div className={`text-sm transition-colors ${
+                  <div className={`text-xs sm:text-sm transition-colors ${
                     isDark ? 'text-slate-400' : 'text-slate-600'
                   }`}>{benefit.description}</div>
                 </motion.div>
@@ -79,7 +79,7 @@ const HomeBenefits = () => {
 
           {/* Right Column - Visual */}
           <div className="relative">
-            <div className={`relative h-96 bg-gradient-to-br from-emerald-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center overflow-hidden transition-colors ${
+            <div className={`relative h-64 sm:h-80 md:h-96 bg-gradient-to-br from-emerald-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center overflow-hidden transition-colors ${
               isDark ? 'border border-slate-700/50' : 'border border-slate-300/50'
             }`}>
               {/* Animated Grid Pattern */}
@@ -97,16 +97,16 @@ const HomeBenefits = () => {
                   ease: "easeInOut"
                 }}
               >
-                <BarChart3 className="w-32 h-32 text-emerald-400" />
+                <BarChart3 className="w-20 h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 text-emerald-400" />
               </motion.div>
 
               {/* Floating Elements */}
               <motion.div
                 animate={{ y: [0, -20, 0] }}
                 transition={{ repeat: Infinity, duration: 3 }}
-                className="absolute top-10 right-10 bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-xl p-4"
+                className="absolute top-6 sm:top-10 right-6 sm:right-10 bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-xl p-2 sm:p-4"
               >
-                <div className="text-emerald-400 font-bold">+25%</div>
+                <div className="text-emerald-400 font-bold text-sm sm:text-base">+25%</div>
                 <div className={`text-xs transition-colors ${
                   isDark ? 'text-slate-400' : 'text-slate-600'
                 }`}>Growth</div>
@@ -115,9 +115,9 @@ const HomeBenefits = () => {
               <motion.div
                 animate={{ y: [0, 20, 0] }}
                 transition={{ repeat: Infinity, duration: 3, delay: 0.5 }}
-                className="absolute bottom-10 left-10 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-4"
+                className="absolute bottom-6 sm:bottom-10 left-6 sm:left-10 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-2 sm:p-4"
               >
-                <div className="text-blue-400 font-bold">AI</div>
+                <div className="text-blue-400 font-bold text-sm sm:text-base">AI</div>
                 <div className={`text-xs transition-colors ${
                   isDark ? 'text-slate-400' : 'text-slate-600'
                 }`}>Powered</div>

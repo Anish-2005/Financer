@@ -73,21 +73,21 @@ const HomeFeatures = () => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="text-center mb-16"
+        className="text-center mb-12 sm:mb-16 px-4 sm:px-0"
       >
-        <h3 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors ${
+        <h3 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 transition-colors ${
           isDark ? 'text-white' : 'text-slate-900'
         }`}>
           Complete Financial Toolkit
         </h3>
-        <p className={`text-xl max-w-2xl mx-auto transition-colors ${
+        <p className={`text-lg sm:text-xl max-w-2xl mx-auto transition-colors ${
           isDark ? 'text-slate-400' : 'text-slate-600'
         }`}>
           Everything you need to take control of your finances in one place
         </p>
       </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-0">
         {features.map((feature, index) => (
           <motion.div
             key={index}
@@ -96,7 +96,7 @@ const HomeFeatures = () => {
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
             whileHover={{ y: -8, scale: 1.02 }}
-            className={`group relative backdrop-blur-sm rounded-2xl p-8 cursor-pointer overflow-hidden transition-all duration-300 ${
+            className={`group relative backdrop-blur-sm rounded-2xl p-6 sm:p-8 cursor-pointer overflow-hidden transition-all duration-300 ${
               isDark
                 ? 'bg-slate-800/40 border border-slate-700/50 hover:border-slate-600'
                 : 'bg-white/40 border border-slate-200/50 hover:border-slate-300'
@@ -108,17 +108,17 @@ const HomeFeatures = () => {
 
             <div className="relative z-10">
               {/* Icon */}
-              <div className={`inline-flex p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} mb-6 shadow-lg`}>
-                <feature.icon className="w-10 h-10 text-white" />
+              <div className={`inline-flex p-3 sm:p-4 rounded-2xl bg-gradient-to-br ${feature.gradient} mb-4 sm:mb-6 shadow-lg`}>
+                <feature.icon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
 
               {/* Content */}
-              <h3 className={`text-2xl font-bold mb-3 transition-colors ${
+              <h3 className={`text-xl sm:text-2xl font-bold mb-3 transition-colors ${
                 isDark ? 'text-white' : 'text-slate-900'
               }`}>
                 {feature.title}
               </h3>
-              <p className={`mb-6 leading-relaxed transition-colors ${
+              <p className={`mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base transition-colors ${
                 isDark ? 'text-slate-400' : 'text-slate-600'
               }`}>
                 {feature.description}
@@ -131,7 +131,7 @@ const HomeFeatures = () => {
                   animate={{ x: [0, 5, 0] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
                 >
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                 </motion.div>
               </div>
             </div>
