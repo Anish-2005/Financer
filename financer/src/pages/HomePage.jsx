@@ -14,10 +14,12 @@ import {
   Target,
   ArrowRight
 } from "lucide-react";
+import { useTheme } from "../contexts/ThemeContext";
 import Footer from "../components/Footer";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { isDark } = useTheme();
   
   const features = [
     {
@@ -78,11 +80,148 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
-      {/* Animated Background Elements */}
+    <div className={`min-h-screen transition-colors duration-300 relative overflow-hidden ${
+      isDark 
+        ? 'bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900' 
+        : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+    }`}>
+      {/* Enhanced Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        {/* Large Gradient Orbs */}
+        <motion.div 
+          animate={{ 
+            x: [0, 100, 0],
+            y: [0, -50, 0],
+            scale: [1, 1.2, 1]
+          }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 20,
+            ease: "easeInOut"
+          }}
+          className={`absolute -top-40 -left-40 w-96 h-96 rounded-full blur-3xl ${
+            isDark 
+              ? 'bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20' 
+              : 'bg-gradient-to-r from-blue-400/30 via-purple-400/30 to-pink-400/30'
+          }`}
+        />
+        
+        <motion.div 
+          animate={{ 
+            x: [0, -80, 0],
+            y: [0, 80, 0],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 15,
+            ease: "easeInOut",
+            delay: 1
+          }}
+          className={`absolute top-1/3 right-0 w-[500px] h-[500px] rounded-full blur-3xl ${
+            isDark 
+              ? 'bg-gradient-to-l from-emerald-500/20 via-teal-500/20 to-cyan-500/20' 
+              : 'bg-gradient-to-l from-emerald-400/30 via-teal-400/30 to-cyan-400/30'
+          }`}
+        />
+        
+        <motion.div 
+          animate={{ 
+            x: [0, 60, 0],
+            y: [0, -60, 0],
+            scale: [1, 1.15, 1]
+          }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 18,
+            ease: "easeInOut",
+            delay: 2
+          }}
+          className={`absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full blur-3xl ${
+            isDark 
+              ? 'bg-gradient-to-tr from-violet-500/20 via-fuchsia-500/20 to-pink-500/20' 
+              : 'bg-gradient-to-tr from-violet-400/30 via-fuchsia-400/30 to-pink-400/30'
+          }`}
+        />
+
+        {/* Geometric Shapes */}
+        <motion.div
+          animate={{ 
+            rotate: [0, 360],
+            scale: [1, 1.1, 1]
+          }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 25,
+            ease: "linear"
+          }}
+          className={`absolute top-1/4 left-1/2 w-64 h-64 ${
+            isDark 
+              ? 'border-2 border-blue-500/10' 
+              : 'border-2 border-blue-400/20'
+          } rounded-full`}
+        />
+
+        <motion.div
+          animate={{ 
+            rotate: [360, 0],
+            x: [0, 50, 0],
+            y: [0, -30, 0]
+          }}
+          transition={{ 
+            repeat: Infinity, 
+            duration: 30,
+            ease: "easeInOut"
+          }}
+          className={`absolute bottom-1/3 right-1/4 w-48 h-48 ${
+            isDark 
+              ? 'border-2 border-purple-500/10' 
+              : 'border-2 border-purple-400/20'
+          }`}
+          style={{ clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)' }}
+        />
+
+        {/* Floating Dots */}
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{
+              y: [0, -30, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 3 + i * 0.3,
+              delay: i * 0.2,
+              ease: "easeInOut"
+            }}
+            className={`absolute w-2 h-2 rounded-full ${
+              isDark ? 'bg-emerald-400/30' : 'bg-emerald-500/40'
+            }`}
+            style={{
+              left: `${10 + (i * 6)}%`,
+              top: `${20 + (i * 4)}%`,
+            }}
+          />
+        ))}
+
+        {/* Grid Pattern Overlay */}
+        <div 
+          className={`absolute inset-0 ${
+            isDark 
+              ? 'bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)]' 
+              : 'bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)]'
+          } bg-[size:4rem_4rem]`}
+        />
+
+        {/* Radial Gradient Overlay */}
+        <div 
+          className={`absolute inset-0 ${
+            isDark 
+              ? 'bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.05),transparent_50%)]' 
+              : 'bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.08),transparent_50%)]'
+          }`}
+        />
       </div>
 
       {/* Hero Section */}
@@ -98,7 +237,11 @@ const HomePage = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-emerald-500/20 backdrop-blur-sm"
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm transition-colors ${
+              isDark 
+                ? 'bg-slate-800/50 border border-emerald-500/20' 
+                : 'bg-white/50 border border-emerald-500/30'
+            }`}
           >
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -109,14 +252,20 @@ const HomePage = () => {
 
           {/* Main Heading */}
           <div className="space-y-6">
-            <h2 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent leading-tight">
+            <h2 className={`text-6xl md:text-7xl font-bold leading-tight transition-colors ${
+              isDark 
+                ? 'bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent' 
+                : 'bg-gradient-to-r from-slate-900 via-blue-900 to-emerald-900 bg-clip-text text-transparent'
+            }`}>
               Master Your Financial
               <br />
               <span className="bg-gradient-to-r from-emerald-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
                 Journey Today
               </span>
             </h2>
-            <p className="text-xl text-slate-400 max-w-3xl mx-auto leading-relaxed">
+            <p className={`text-xl max-w-3xl mx-auto leading-relaxed transition-colors ${
+              isDark ? 'text-slate-400' : 'text-slate-600'
+            }`}>
               Unify tracking, analysis, and investment management in one powerful platform. 
               Make smarter financial decisions with AI-driven insights and real-time market data.
             </p>
@@ -135,7 +284,11 @@ const HomePage = () => {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white font-semibold text-lg backdrop-blur-sm hover:bg-slate-800/70 transition-all"
+              className={`px-8 py-4 rounded-xl font-semibold text-lg backdrop-blur-sm transition-all ${
+                isDark 
+                  ? 'bg-slate-800/50 border border-slate-700 text-white hover:bg-slate-800/70' 
+                  : 'bg-white/50 border border-slate-300 text-slate-900 hover:bg-white/70'
+              }`}
             >
               Watch Demo
             </motion.button>
@@ -157,12 +310,18 @@ const HomePage = () => {
               <motion.div 
                 key={index}
                 whileHover={{ y: -5 }}
-                className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6"
+                className={`backdrop-blur-sm rounded-xl p-6 transition-colors ${
+                  isDark 
+                    ? 'bg-slate-800/30 border border-slate-700/50' 
+                    : 'bg-white/30 border border-slate-200/50'
+                }`}
               >
                 <div className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
                   {stat.value}
                 </div>
-                <div className="text-slate-400 text-sm mt-1">{stat.label}</div>
+                <div className={`text-sm mt-1 transition-colors ${
+                  isDark ? 'text-slate-400' : 'text-slate-600'
+                }`}>{stat.label}</div>
               </motion.div>
             ))}
           </motion.div>
@@ -177,10 +336,14 @@ const HomePage = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h3 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h3 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors ${
+            isDark ? 'text-white' : 'text-slate-900'
+          }`}>
             Complete Financial Toolkit
           </h3>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
+          <p className={`text-xl max-w-2xl mx-auto transition-colors ${
+            isDark ? 'text-slate-400' : 'text-slate-600'
+          }`}>
             Everything you need to take control of your finances in one place
           </p>
         </motion.div>
@@ -194,7 +357,11 @@ const HomePage = () => {
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ y: -8, scale: 1.02 }}
-              className="group relative bg-slate-800/40 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-8 cursor-pointer overflow-hidden transition-all duration-300 hover:border-slate-600"
+              className={`group relative backdrop-blur-sm rounded-2xl p-8 cursor-pointer overflow-hidden transition-all duration-300 ${
+                isDark 
+                  ? 'bg-slate-800/40 border border-slate-700/50 hover:border-slate-600' 
+                  : 'bg-white/40 border border-slate-200/50 hover:border-slate-300'
+              }`}
               onClick={feature.action}
             >
               {/* Gradient Background on Hover */}
@@ -207,10 +374,14 @@ const HomePage = () => {
                 </div>
 
                 {/* Content */}
-                <h3 className="text-2xl font-bold text-white mb-3">
+                <h3 className={`text-2xl font-bold mb-3 transition-colors ${
+                  isDark ? 'text-white' : 'text-slate-900'
+                }`}>
                   {feature.title}
                 </h3>
-                <p className="text-slate-400 mb-6 leading-relaxed">
+                <p className={`mb-6 leading-relaxed transition-colors ${
+                  isDark ? 'text-slate-400' : 'text-slate-600'
+                }`}>
                   {feature.description}
                 </p>
 
@@ -236,7 +407,11 @@ const HomePage = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-12"
+          className={`backdrop-blur-xl rounded-3xl p-12 transition-colors ${
+            isDark 
+              ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50' 
+              : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
+          }`}
         >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column */}
@@ -244,14 +419,18 @@ const HomePage = () => {
               <div className="inline-flex px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/20">
                 <span className="text-emerald-400 font-semibold text-sm">Why Choose Financer</span>
               </div>
-              <h3 className="text-4xl md:text-5xl font-bold text-white leading-tight">
+              <h3 className={`text-4xl md:text-5xl font-bold leading-tight transition-colors ${
+                isDark ? 'text-white' : 'text-slate-900'
+              }`}>
                 Smart Analytics,
                 <br />
                 <span className="bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-transparent">
                   Smarter Decisions
                 </span>
               </h3>
-              <p className="text-lg text-slate-400 leading-relaxed">
+              <p className={`text-lg leading-relaxed transition-colors ${
+                isDark ? 'text-slate-400' : 'text-slate-600'
+              }`}>
                 Our AI-powered platform analyzes your financial data to deliver actionable insights, 
                 helping you make informed decisions and achieve your financial goals faster.
               </p>
@@ -262,11 +441,19 @@ const HomePage = () => {
                   <motion.div
                     key={index}
                     whileHover={{ scale: 1.05 }}
-                    className="bg-slate-800/50 rounded-xl p-4 border border-slate-700/50"
+                    className={`rounded-xl p-4 transition-colors ${
+                      isDark 
+                        ? 'bg-slate-800/50 border border-slate-700/50' 
+                        : 'bg-white/50 border border-slate-200/50'
+                    }`}
                   >
                     <benefit.icon className="w-8 h-8 text-emerald-400 mb-2" />
-                    <div className="text-white font-semibold">{benefit.title}</div>
-                    <div className="text-slate-400 text-sm">{benefit.description}</div>
+                    <div className={`font-semibold transition-colors ${
+                      isDark ? 'text-white' : 'text-slate-900'
+                    }`}>{benefit.title}</div>
+                    <div className={`text-sm transition-colors ${
+                      isDark ? 'text-slate-400' : 'text-slate-600'
+                    }`}>{benefit.description}</div>
                   </motion.div>
                 ))}
               </div>
@@ -274,7 +461,9 @@ const HomePage = () => {
 
             {/* Right Column - Visual */}
             <div className="relative">
-              <div className="relative h-96 bg-gradient-to-br from-emerald-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl border border-slate-700/50 flex items-center justify-center overflow-hidden">
+              <div className={`relative h-96 bg-gradient-to-br from-emerald-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center overflow-hidden transition-colors ${
+                isDark ? 'border border-slate-700/50' : 'border border-slate-300/50'
+              }`}>
                 {/* Animated Grid Pattern */}
                 <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
                 
@@ -300,7 +489,9 @@ const HomePage = () => {
                   className="absolute top-10 right-10 bg-emerald-500/20 backdrop-blur-sm border border-emerald-500/30 rounded-xl p-4"
                 >
                   <div className="text-emerald-400 font-bold">+25%</div>
-                  <div className="text-xs text-slate-400">Growth</div>
+                  <div className={`text-xs transition-colors ${
+                    isDark ? 'text-slate-400' : 'text-slate-600'
+                  }`}>Growth</div>
                 </motion.div>
 
                 <motion.div
@@ -309,7 +500,9 @@ const HomePage = () => {
                   className="absolute bottom-10 left-10 bg-blue-500/20 backdrop-blur-sm border border-blue-500/30 rounded-xl p-4"
                 >
                   <div className="text-blue-400 font-bold">AI</div>
-                  <div className="text-xs text-slate-400">Powered</div>
+                  <div className={`text-xs transition-colors ${
+                    isDark ? 'text-slate-400' : 'text-slate-600'
+                  }`}>Powered</div>
                 </motion.div>
               </div>
             </div>
