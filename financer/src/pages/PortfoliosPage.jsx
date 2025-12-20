@@ -124,25 +124,16 @@ const FinancialsPage = () => {
   };
 
   return (
-    <div className={`min-h-screen transition-colors ${
+    <div className={`min-h-screen transition-colors duration-300 relative overflow-hidden ${
       isDark
-        ? 'bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'
-        : 'bg-gradient-to-br from-slate-50 via-white to-slate-100'
+        ? 'bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900'
+        : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
     }`}>
       <AnimatedBackground />
 
       {/* Hero Section */}
-      <div className="relative z-10 pt-20 pb-16">
-        <div className="container mx-auto max-w-7xl px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`backdrop-blur-xl rounded-3xl p-12 text-center transition-colors ${
-              isDark
-                ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50'
-                : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
-            }`}
-          >
+      <div className="relative z-10 pt-28 pb-16">
+        <div className="container mx-auto max-w-7xl px-4 text-center">
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -208,7 +199,6 @@ const FinancialsPage = () => {
                 </motion.div>
               ))}
             </motion.div>
-          </motion.div>
         </div>
       </div>
 
