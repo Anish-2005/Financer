@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -11,24 +9,17 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import {
-  BarChart3,
-  TrendingUp,
-  TrendingDown,
-  Search,
-  Filter,
-  ArrowUpDown,
-  Eye,
-  ArrowRight,
-  Activity,
-  X,
-  Star,
-  Grid3X3,
-  List
-} from "lucide-react";
 import { useTheme } from "../contexts/ThemeContext";
 import AnimatedBackground from "../components/AnimatedBackground";
 import Footer from "../components/Footer";
+import ComparisonsHero from "../components/comparisons/ComparisonsHero";
+import ComparisonsControls from "../components/comparisons/ComparisonsControls";
+import ComparisonsGrid from "../components/comparisons/ComparisonsGrid";
+import ComparisonsTable from "../components/comparisons/ComparisonsTable";
+import ComparisonsModal from "../components/comparisons/ComparisonsModal";
+import ComparisonsLoading from "../components/comparisons/ComparisonsLoading";
+import ComparisonsError from "../components/comparisons/ComparisonsError";
+import ComparisonsEmpty from "../components/comparisons/ComparisonsEmpty";
 
 ChartJS.register(
   CategoryScale,
@@ -60,7 +51,7 @@ const ComparisonsPage = () => {
         const skip = (pageNumber - 1) * itemsPerPage;
         const response = await fetch(`http://127.0.0.1:8000/stocks?skip=${skip}&limit=${itemsPerPage}`);
         const text = await response.text();
-        
+
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         if (!text) throw new Error("Empty response from server");
 
@@ -99,6 +90,111 @@ const ComparisonsPage = () => {
       }
     };
 
+    fetchStocks();
+  }, [pageNumber, itemsPerPage]);
+
+  const getChartData = (historical) => ({
+    labels: ['4D', '3D', '2D', '1D', 'Today'],
+    datasets: [{
+      label: 'Price',
+      data: historical,
+      borderColor: '#4ADE80',
+      tension: 0.4,
+      pointRadius: 0,
+    }]
+  });
+
+  const sortedStocks = [...stocks].sort((a, b) => {
+    if (sortBy === "price") {
+      return sortOrder === "desc" ? b.price - a.price : a.price - b.price;
+    }
+    return sortOrder === "desc" ? b.change - a.change : a.change - b.change;
+  });
+
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+  const paginatedStocks = sortedStocks; // Already paginated from server
+
+  const handleSortChange = (newSortBy) => {
+    if (sortBy === newSortBy) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(newSortBy);
+      setSortOrder("desc");
+    }
+  };
+
+  return (
+    <div className={`min-h-screen transition-colors duration-300 relative overflow-hidden ${
+      isDark
+        ? 'bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900'
+        : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
+    }`}>
+      <AnimatedBackground />
+
+      <ComparisonsHero
+        isDark={isDark}
+        totalCount={totalCount}
+        stocks={stocks}
+      />
+
+      <ComparisonsControls
+        isDark={isDark}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        itemsPerPage={itemsPerPage}
+        setItemsPerPage={setItemsPerPage}
+        pageNumber={pageNumber}
+        setPageNumber={setPageNumber}
+        totalPages={totalPages}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+        handleSortChange={handleSortChange}
+      />
+
+      {/* Stock Display Section */}
+      {viewMode === "grid" ? (
+        <ComparisonsGrid
+          isDark={isDark}
+          paginatedStocks={paginatedStocks}
+          onStockClick={setSelectedStock}
+        />
+      ) : (
+        <ComparisonsTable
+          isDark={isDark}
+          paginatedStocks={paginatedStocks}
+          onStockClick={setSelectedStock}
+        />
+      )}
+
+      {/* Empty State */}
+      {paginatedStocks.length === 0 && !loading && !error && (
+        <div className="relative z-10 container mx-auto max-w-7xl px-4 pb-20">
+          <ComparisonsEmpty isDark={isDark} />
+        </div>
+      )}
+
+      {/* Loading State */}
+      {loading && <ComparisonsLoading isDark={isDark} />}
+
+      {/* Error State */}
+      {error && <ComparisonsError isDark={isDark} error={error} />}
+
+      {/* Detail Modal */}
+      <ComparisonsModal
+        isDark={isDark}
+        selectedStock={selectedStock}
+        onClose={() => setSelectedStock(null)}
+        getChartData={getChartData}
+      />
+
+      <Footer />
+    </div>
+  );
+};
+
+export default ComparisonsPage;
     fetchStocks();
   }, [pageNumber, itemsPerPage]);
 
