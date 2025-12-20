@@ -46,23 +46,27 @@ class LoginSchema(BaseModel):
     email: EmailStr = Field(..., description="User email address")
     password: str = Field(..., description="User password")
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "email": "user@example.com",
                 "password": "SecurePass123"
             }
         }
+    }
 
 
 class ChatRequest(BaseModel):
     """AI chat request schema"""
     message: str = Field(..., min_length=1, max_length=2000, description="User message")
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "message": "What are the best investment options for someone in their 30s?"
             }
         }
+    }
 
 
 class StockData(BaseModel):
@@ -79,7 +83,8 @@ class StockData(BaseModel):
     sector: Optional[str]
     last_updated: Optional[datetime]
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "symbol": "RELIANCE",
                 "name": "Reliance Industries Ltd",
@@ -94,6 +99,7 @@ class StockData(BaseModel):
                 "last_updated": "2025-12-20T10:30:00Z"
             }
         }
+    }
 
 
 class PortfolioHolding(BaseModel):
@@ -115,7 +121,8 @@ class PortfolioData(BaseModel):
     holdings: List[PortfolioHolding]
     last_updated: datetime
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "total_value": 2000000.00,
                 "total_gain_loss": 248000.00,
@@ -134,6 +141,7 @@ class PortfolioData(BaseModel):
                 "last_updated": "2025-12-20T10:30:00Z"
             }
         }
+    }
 
 
 class FDCalculatorRequest(BaseModel):
@@ -147,7 +155,8 @@ class FDCalculatorRequest(BaseModel):
         description="Compounding frequency"
     )
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "principal": 100000,
                 "rate": 7.5,
@@ -155,6 +164,7 @@ class FDCalculatorRequest(BaseModel):
                 "compounding_frequency": "quarterly"
             }
         }
+    }
 
 
 class FDCalculatorResponse(BaseModel):
@@ -165,7 +175,8 @@ class FDCalculatorResponse(BaseModel):
     effective_rate: float
     breakdown: Dict[str, Any]
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "principal": 100000,
                 "interest_earned": 15969.54,
@@ -177,6 +188,7 @@ class FDCalculatorResponse(BaseModel):
                 }
             }
         }
+    }
 
 
 class UserProfile(BaseModel):
@@ -190,7 +202,8 @@ class UserProfile(BaseModel):
     preferences: Optional[Dict[str, Any]] = {}
     is_active: bool = True
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "uid": "firebase_user_id",
                 "email": "user@example.com",
@@ -202,6 +215,7 @@ class UserProfile(BaseModel):
                 "is_active": True
             }
         }
+    }
 
 
 class APIResponse(BaseModel):
@@ -212,7 +226,8 @@ class APIResponse(BaseModel):
     timestamp: datetime
     request_id: Optional[str]
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "success": True,
                 "data": {"key": "value"},
@@ -221,6 +236,7 @@ class APIResponse(BaseModel):
                 "request_id": "req_123456"
             }
         }
+    }
 
 
 class ErrorResponse(BaseModel):
@@ -231,7 +247,8 @@ class ErrorResponse(BaseModel):
     details: Optional[Dict[str, Any]]
     timestamp: datetime
 
-    model_config = json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "success": False,
                 "error": "Invalid request parameters",
@@ -240,3 +257,4 @@ class ErrorResponse(BaseModel):
                 "timestamp": "2025-12-20T10:30:00Z"
             }
         }
+    }

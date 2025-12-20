@@ -67,7 +67,7 @@ def initialize_firebase():
             logger.warning("Firebase credentials not found or already initialized")
     except Exception as e:
         logger.error(f"Failed to initialize Firebase: {e}")
-        raise
+        # Don't raise exception, just log it
 
 # Pyrebase configuration
 firebase_config = {
@@ -93,23 +93,40 @@ def initialize_gemini():
             logger.warning("Google API key not found")
     except Exception as e:
         logger.error(f"Failed to initialize Google AI: {e}")
-        raise
+        # Don't raise exception, just log it
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager"""
     # Startup
     logger.info("Starting Financer API...")
-    initialize_firebase()
-    initialize_gemini()
-    await db_service.connect()
-    logger.info("All services initialized successfully")
+    try:
+        initialize_firebase()
+    except Exception as e:
+        logger.warning(f"Firebase initialization failed: {e}")
+
+    try:
+        initialize_gemini()
+    except Exception as e:
+        logger.warning(f"Gemini AI initialization failed: {e}")
+
+    try:
+        await db_service.connect()
+        logger.info("Database connected successfully")
+    except Exception as e:
+        logger.warning(f"Database connection failed: {e}")
+
+    logger.info("Financer API startup complete")
 
     yield
 
     # Shutdown
     logger.info("Shutting down Financer API...")
-    await db_service.disconnect()
+    try:
+        await db_service.disconnect()
+        logger.info("Database disconnected successfully")
+    except Exception as e:
+        logger.warning(f"Database disconnection failed: {e}")
     logger.info("Shutdown complete")
 
 # Rate limiting
