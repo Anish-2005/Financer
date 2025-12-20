@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Navbar from "./components/Navbar";
+import AnimatedBackground from "./components/AnimatedBackground";
 import LandingPage from "./pages/LandingPage.jsx";
 import ChatbotPage from "./pages/ChatbotPage.jsx";
 import PortfoliosPage from "./pages/PortfoliosPage.jsx";
@@ -17,11 +18,14 @@ const App = () => {
   const { isDark } = useTheme();
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
+    <div className={`min-h-screen transition-colors duration-300 relative overflow-hidden ${
       isDark 
         ? 'bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900' 
         : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
     }`}>
+      {/* Animated Background - Excluded from Landing Page and Auth Page */}
+      {!['/', '/auth'].includes(location.pathname) && <AnimatedBackground />}
+      
       {/* Navigation Bar - Excluded from Landing Page and Auth Page */}
       {!['/', '/auth'].includes(location.pathname) && <Navbar />}
 
