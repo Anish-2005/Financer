@@ -2,7 +2,7 @@
 Data models for the Financer API using Pydantic.
 """
 
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List, Dict, Any
 from enum import Enum
 from datetime import datetime
@@ -21,7 +21,8 @@ class SignUpSchema(BaseModel):
     password: str = Field(..., min_length=8, description="Password (minimum 8 characters)")
     display_name: Optional[str] = Field(None, description="Display name")
 
-    @validator('password')
+    @field_validator('password')
+    @classmethod
     def password_strength(cls, v):
         if not any(char.isdigit() for char in v):
             raise ValueError('Password must contain at least one digit')
@@ -29,14 +30,15 @@ class SignUpSchema(BaseModel):
             raise ValueError('Password must contain at least one uppercase letter')
         return v
 
-    class Config:
-        json_schema_extra = {
+    model_config = {
+        "json_schema_extra": {
             "example": {
                 "email": "user@example.com",
                 "password": "SecurePass123",
                 "display_name": "John Doe"
             }
         }
+    }
 
 
 class LoginSchema(BaseModel):
@@ -44,8 +46,7 @@ class LoginSchema(BaseModel):
     email: EmailStr = Field(..., description="User email address")
     password: str = Field(..., description="User password")
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "email": "user@example.com",
                 "password": "SecurePass123"
@@ -57,8 +58,7 @@ class ChatRequest(BaseModel):
     """AI chat request schema"""
     message: str = Field(..., min_length=1, max_length=2000, description="User message")
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "message": "What are the best investment options for someone in their 30s?"
             }
@@ -79,8 +79,7 @@ class StockData(BaseModel):
     sector: Optional[str]
     last_updated: Optional[datetime]
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "symbol": "RELIANCE",
                 "name": "Reliance Industries Ltd",
@@ -116,8 +115,7 @@ class PortfolioData(BaseModel):
     holdings: List[PortfolioHolding]
     last_updated: datetime
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "total_value": 2000000.00,
                 "total_gain_loss": 248000.00,
@@ -149,8 +147,7 @@ class FDCalculatorRequest(BaseModel):
         description="Compounding frequency"
     )
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "principal": 100000,
                 "rate": 7.5,
@@ -168,8 +165,7 @@ class FDCalculatorResponse(BaseModel):
     effective_rate: float
     breakdown: Dict[str, Any]
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "principal": 100000,
                 "interest_earned": 15969.54,
@@ -194,8 +190,7 @@ class UserProfile(BaseModel):
     preferences: Optional[Dict[str, Any]] = {}
     is_active: bool = True
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "uid": "firebase_user_id",
                 "email": "user@example.com",
@@ -217,8 +212,7 @@ class APIResponse(BaseModel):
     timestamp: datetime
     request_id: Optional[str]
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "success": True,
                 "data": {"key": "value"},
@@ -237,8 +231,7 @@ class ErrorResponse(BaseModel):
     details: Optional[Dict[str, Any]]
     timestamp: datetime
 
-    class Config:
-        json_schema_extra = {
+    model_config = json_schema_extra = {
             "example": {
                 "success": False,
                 "error": "Invalid request parameters",
