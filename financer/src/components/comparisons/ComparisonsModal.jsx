@@ -18,29 +18,29 @@ const ComparisonsModal = ({
   if (!selectedStock || !selectedStock.symbol) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 z-50">
       <motion.div
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className={`backdrop-blur-xl rounded-3xl p-8 max-w-6xl w-full max-h-[90vh] overflow-y-auto transition-colors ${
+        className={`backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto transition-colors ${
           isDark
             ? 'bg-slate-800/95 border border-slate-700/50'
             : 'bg-white/95 border border-slate-200/50'
         }`}
       >
-        <div className="flex justify-between items-start mb-8">
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
-              <BarChart3 className="w-8 h-8 text-white" />
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6 sm:mb-8">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <div className="p-2 sm:p-3 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600">
+              <BarChart3 className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
             <div>
-              <h2 className={`text-3xl font-bold transition-colors ${
+              <h2 className={`text-2xl sm:text-3xl font-bold transition-colors ${
                 isDark ? 'text-white' : 'text-slate-900'
               }`}>
                 {selectedStock.name || selectedStock.symbol}
               </h2>
-              <p className={`text-lg transition-colors ${
+              <p className={`text-base sm:text-lg transition-colors ${
                 isDark ? 'text-slate-400' : 'text-slate-600'
               }`}>{selectedStock.symbol} • Detailed Analysis</p>
             </div>
@@ -49,17 +49,17 @@ const ComparisonsModal = ({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onClose}
-            className={`p-3 rounded-xl transition-colors ${
+            className={`p-2 sm:p-3 rounded-xl transition-colors self-end sm:self-auto ${
               isDark
                 ? 'bg-slate-700/50 text-slate-400 hover:bg-slate-700 hover:text-white'
                 : 'bg-slate-200/50 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
             }`}
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </motion.button>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           <div className="space-y-6">
             {/* Price Details Card */}
             <motion.div

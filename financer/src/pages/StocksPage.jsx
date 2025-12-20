@@ -117,19 +117,19 @@ const StocksPage = () => {
       {error && <ErrorState isDark={isDark} error={error} />}
 
       {!loading && !error && (
-        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-20">
+        <div className="relative z-10 container mx-auto max-w-7xl px-4 py-12 sm:py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12 sm:mb-16"
           >
-            <h3 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors ${
+            <h3 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 transition-colors ${
               isDark ? 'text-white' : 'text-slate-900'
             }`}>
               Market Overview
             </h3>
-            <p className={`text-xl max-w-2xl mx-auto transition-colors ${
+            <p className={`text-base sm:text-lg md:text-xl max-w-2xl mx-auto transition-colors ${
               isDark ? 'text-slate-400' : 'text-slate-600'
             }`}>
               Track real-time stock performance and market movements
@@ -150,8 +150,8 @@ const StocksPage = () => {
           />
           
           {loadingMore && (
-            <div className="flex justify-center py-8">
-              <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${isDark ? 'border-white' : 'border-slate-900'}`}></div>
+            <div className="flex justify-center py-6 sm:py-8">
+              <div className={`animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 ${isDark ? 'border-white' : 'border-slate-900'}`}></div>
             </div>
           )}
         </div>

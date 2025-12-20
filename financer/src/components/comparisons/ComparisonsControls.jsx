@@ -38,7 +38,7 @@ const ComparisonsControls = ({
           </span>
           <span className="text-emerald-400 font-semibold text-sm">Filter & Sort</span>
         </motion.div>
-        <h3 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors ${
+        <h3 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 transition-colors ${
           isDark ? 'text-white' : 'text-slate-900'
         }`}>
           Customize Your
@@ -47,14 +47,14 @@ const ComparisonsControls = ({
             Analysis View
           </span>
         </h3>
-        <p className={`text-xl max-w-2xl mx-auto transition-colors ${
+        <p className={`text-lg sm:text-xl max-w-2xl mx-auto transition-colors ${
           isDark ? 'text-slate-400' : 'text-slate-600'
         }`}>
           Sort and filter stocks to focus on the data that matters most to your investment strategy
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 max-w-6xl mx-auto">
         <div className="space-y-2">
           <label className={`text-sm font-medium transition-colors ${
             isDark ? 'text-slate-300' : 'text-slate-700'

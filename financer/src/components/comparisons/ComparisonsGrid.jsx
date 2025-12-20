@@ -33,7 +33,7 @@ const ComparisonsGrid = ({
           </span>
           <span className="text-blue-400 font-semibold text-sm">Market Analysis</span>
         </motion.div>
-        <h3 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors ${
+        <h3 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 transition-colors ${
           isDark ? 'text-white' : 'text-slate-900'
         }`}>
           Stock
@@ -41,7 +41,7 @@ const ComparisonsGrid = ({
             Comparison Grid
           </span>
         </h3>
-        <p className={`text-xl max-w-2xl mx-auto transition-colors ${
+        <p className={`text-lg sm:text-xl max-w-2xl mx-auto transition-colors ${
           isDark ? 'text-slate-400' : 'text-slate-600'
         }`}>
           Compare stocks side by side with real-time data and analytics

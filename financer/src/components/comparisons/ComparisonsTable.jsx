@@ -33,7 +33,7 @@ const ComparisonsTable = ({
           </span>
           <span className="text-blue-400 font-semibold text-sm">Market Analysis</span>
         </motion.div>
-        <h3 className={`text-4xl md:text-5xl font-bold mb-4 transition-colors ${
+        <h3 className={`text-3xl sm:text-4xl md:text-5xl font-bold mb-4 transition-colors ${
           isDark ? 'text-white' : 'text-slate-900'
         }`}>
           Stock
@@ -41,7 +41,7 @@ const ComparisonsTable = ({
             Comparison Table
           </span>
         </h3>
-        <p className={`text-xl max-w-2xl mx-auto transition-colors ${
+        <p className={`text-lg sm:text-xl max-w-2xl mx-auto transition-colors ${
           isDark ? 'text-slate-400' : 'text-slate-600'
         }`}>
           Detailed tabular view for comprehensive stock analysis
@@ -59,22 +59,22 @@ const ComparisonsTable = ({
               isDark ? 'bg-slate-700/30' : 'bg-slate-50/50'
             }`}>
               <tr>
-                <th className={`px-6 py-4 text-left text-sm font-semibold transition-colors ${
+                <th className={`px-3 sm:px-6 py-4 text-left text-xs sm:text-sm font-semibold transition-colors ${
                   isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>Symbol</th>
-                <th className={`px-6 py-4 text-left text-sm font-semibold transition-colors ${
+                <th className={`px-3 sm:px-6 py-4 text-left text-xs sm:text-sm font-semibold transition-colors ${
                   isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>Company</th>
-                <th className={`px-6 py-4 text-right text-sm font-semibold transition-colors ${
+                <th className={`px-3 sm:px-6 py-4 text-right text-xs sm:text-sm font-semibold transition-colors ${
                   isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>Price</th>
-                <th className={`px-6 py-4 text-right text-sm font-semibold transition-colors ${
+                <th className={`px-3 sm:px-6 py-4 text-right text-xs sm:text-sm font-semibold transition-colors ${
                   isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>Change</th>
-                <th className={`px-6 py-4 text-right text-sm font-semibold transition-colors ${
+                <th className={`hidden sm:table-cell px-6 py-4 text-right text-sm font-semibold transition-colors ${
                   isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>Volume</th>
-                <th className={`px-6 py-4 text-center text-sm font-semibold transition-colors ${
+                <th className={`px-3 sm:px-6 py-4 text-center text-xs sm:text-sm font-semibold transition-colors ${
                   isDark ? 'text-slate-300' : 'text-slate-700'
                 }`}>Action</th>
               </tr>
@@ -94,28 +94,28 @@ const ComparisonsTable = ({
                     isDark ? 'border-slate-700/30' : 'border-slate-200/30'
                   }`}
                 >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="p-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
-                        <BarChart3 className="w-4 h-4 text-white" />
+                  <td className="px-3 sm:px-6 py-4">
+                    <div className="flex items-center gap-2 sm:gap-3">
+                      <div className="p-1 sm:p-1.5 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
+                        <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                       </div>
-                      <span className={`font-semibold transition-colors ${
+                      <span className={`font-semibold text-sm sm:text-base transition-colors ${
                         isDark ? 'text-white' : 'text-slate-900'
                       }`}>{stock.symbol}</span>
                     </div>
                   </td>
-                  <td className={`px-6 py-4 text-sm transition-colors ${
+                  <td className={`px-3 sm:px-6 py-4 text-xs sm:text-sm transition-colors ${
                     isDark ? 'text-slate-300' : 'text-slate-700'
                   }`}>
-                      {stock.name && stock.name.length > 30 ? `${stock.name.substring(0, 30)}...` : (stock.name || stock.symbol)}
+                      {stock.name && stock.name.length > 20 ? `${stock.name.substring(0, 20)}...` : (stock.name || stock.symbol)}
                   </td>
-                  <td className={`px-6 py-4 text-right font-bold transition-colors ${
+                  <td className={`px-3 sm:px-6 py-4 text-right font-bold text-sm sm:text-base transition-colors ${
                     isDark ? 'text-white' : 'text-slate-900'
                   }`}>
                     ₹{stock.price.toLocaleString()}
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm font-semibold ${
+                  <td className="px-3 sm:px-6 py-4 text-right">
+                    <div className={`inline-flex items-center gap-1 px-1 sm:px-2 py-1 rounded-full text-xs sm:text-sm font-semibold ${
                       stock.change >= 0
                         ? 'bg-emerald-500/20 text-emerald-400'
                         : stock.change === 0
@@ -132,18 +132,18 @@ const ComparisonsTable = ({
                       {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}%
                     </div>
                   </td>
-                  <td className={`px-6 py-4 text-right text-sm transition-colors ${
+                  <td className={`hidden sm:table-cell px-6 py-4 text-right text-sm transition-colors ${
                     isDark ? 'text-slate-400' : 'text-slate-600'
                   }`}>
                     {stock.otherDetails.volume ? (stock.otherDetails.volume / 1000000).toFixed(1) + 'M' : 'N/A'}
                   </td>
-                  <td className="px-6 py-4 text-center">
+                  <td className="px-3 sm:px-6 py-4 text-center">
                     <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="p-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors"
+                      className="p-1.5 sm:p-2 rounded-lg bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 transition-colors"
                     >
-                      <Eye className="w-4 h-4" />
+                      <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
                     </motion.button>
                   </td>
                 </motion.tr>

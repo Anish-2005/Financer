@@ -34,7 +34,7 @@ const ComparisonsHero = ({
 
         {/* Main Heading */}
         <div className="space-y-6">
-          <h2 className={`text-6xl md:text-7xl font-bold leading-tight transition-colors ${
+          <h2 className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight transition-colors ${
             isDark
               ? 'bg-gradient-to-r from-white via-blue-100 to-emerald-100 bg-clip-text text-transparent'
               : 'bg-gradient-to-r from-slate-900 via-blue-900 to-emerald-900 bg-clip-text text-transparent'
@@ -45,7 +45,7 @@ const ComparisonsHero = ({
               Stock Performance
             </span>
           </h2>
-          <p className={`text-xl max-w-3xl mx-auto leading-relaxed transition-colors ${
+          <p className={`text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed transition-colors ${
             isDark ? 'text-slate-400' : 'text-slate-600'
           }`}>
             Make informed investment decisions with comprehensive stock analysis, real-time data,
