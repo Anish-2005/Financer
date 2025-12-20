@@ -1,12 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { 
-  Wallet, 
-  TrendingUp, 
-  Bot, 
-  Briefcase, 
-  Building2, 
+import {
+  Wallet,
+  TrendingUp,
+  Bot,
+  Briefcase,
+  Building2,
   BarChart3,
   Lock,
   Zap,
@@ -17,6 +17,7 @@ import {
 import { useTheme } from "../contexts/ThemeContext";
 import AnimatedBackground from "../components/AnimatedBackground";
 import Footer from "../components/Footer";
+import SEO from "../components/SEO";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -86,6 +87,13 @@ const HomePage = () => {
         ? 'bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900' 
         : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
     }`}>
+      <SEO
+        title="Dashboard - Personal Finance Management"
+        description="Access your personalized financial dashboard with real-time portfolio tracking, expense analytics, and AI-powered insights. Manage your wealth effectively with Financer."
+        keywords="financial dashboard, portfolio tracking, expense analytics, financial insights, wealth management, investment tracking, personal finance dashboard"
+        type="website"
+      />
+
       <AnimatedBackground />
 
       {/* Hero Section */}

@@ -13,6 +13,7 @@ import {
 import { useTheme } from "../contexts/ThemeContext";
 import AnimatedBackground from "../components/AnimatedBackground";
 import Footer from "../components/Footer";
+import SEO from "../components/SEO";
 
 const ChatbotPage = () => {
   const { isDark } = useTheme();
@@ -89,6 +90,13 @@ const ChatbotPage = () => {
         ? 'bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900'
         : 'bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50'
     }`}>
+      <SEO
+        title="AI Financial Advisor - Personalized Financial Guidance"
+        description="Get personalized financial advice from our AI-powered chatbot. Ask questions about investments, budgeting, savings, and wealth management. Powered by Google Gemini for intelligent financial guidance."
+        keywords="AI financial advisor, chatbot, financial guidance, investment advice, budgeting help, wealth management, Google Gemini AI, financial planning assistant"
+        type="website"
+      />
+
       <AnimatedBackground />
 
       {/* Hero Section */}

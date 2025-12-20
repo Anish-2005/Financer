@@ -1,17 +1,26 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Navbar from "./components/Navbar";
 import AnimatedBackground from "./components/AnimatedBackground";
-import LandingPage from "./pages/LandingPage.jsx";
-import ChatbotPage from "./pages/ChatbotPage.jsx";
-import PortfoliosPage from "./pages/PortfoliosPage.jsx";
-import FDPage from "./pages/FDPage.jsx";
-import ExpensesPage from "./pages/ExpensesPage.jsx";
-import ComparisonsPage from "./pages/ComparisonsPage.jsx";
-import HomePage from "./pages/HomePage.jsx";
-import AuthPage from './pages/AuthPage.jsx';
-import StocksPage from "./pages/StocksPage.jsx";
+
+// Lazy load all pages for code splitting
+const LandingPage = React.lazy(() => import("./pages/LandingPage.jsx"));
+const ChatbotPage = React.lazy(() => import("./pages/ChatbotPage.jsx"));
+const PortfoliosPage = React.lazy(() => import("./pages/PortfoliosPage.jsx"));
+const FDPage = React.lazy(() => import("./pages/FDPage.jsx"));
+const ExpensesPage = React.lazy(() => import("./pages/ExpensesPage.jsx"));
+const ComparisonsPage = React.lazy(() => import("./pages/ComparisonsPage.jsx"));
+const HomePage = React.lazy(() => import("./pages/HomePage.jsx"));
+const AuthPage = React.lazy(() => import('./pages/AuthPage.jsx'));
+const StocksPage = React.lazy(() => import("./pages/StocksPage.jsx"));
+
+// Loading component for Suspense fallback
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500"></div>
+  </div>
+);
 
 const App = () => {
   const location = useLocation();
@@ -31,17 +40,19 @@ const App = () => {
 
       {/* Page Content */}
       <div className="">
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/home" element={<HomePage />} />
-          <Route path="/advisor" element={<ChatbotPage />} />
-          <Route path="/portfolios" element={<PortfoliosPage />} />
-          <Route path="/fd" element={<FDPage />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/expenses" element={<ExpensesPage />} />
-          <Route path="/comparisons" element={<ComparisonsPage />} />
-          <Route path="/stocks" element={<StocksPage />} />
-        </Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/advisor" element={<ChatbotPage />} />
+            <Route path="/portfolios" element={<PortfoliosPage />} />
+            <Route path="/fd" element={<FDPage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/expenses" element={<ExpensesPage />} />
+            <Route path="/comparisons" element={<ComparisonsPage />} />
+            <Route path="/stocks" element={<StocksPage />} />
+          </Routes>
+        </Suspense>
       </div>
     </div>
   );

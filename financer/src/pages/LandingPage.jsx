@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import SEO from "../components/SEO";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -19,6 +20,14 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-emerald-900">
+      <SEO
+        title="AI-Powered Personal Finance Management"
+        description="Transform your financial future with AI-powered insights, real-time market data, and intelligent expense tracking. Join thousands who have taken control of their money with Financer."
+        keywords="personal finance, AI financial advisor, expense tracking, stock analysis, portfolio management, financial planning, investment calculator, money management"
+        type="website"
+      />
+
+      {/* Navigation Header */}
       {/* Navigation Header */}
       <motion.nav 
         initial={{ y: -20, opacity: 0 }}
