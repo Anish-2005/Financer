@@ -13,22 +13,22 @@ const AddInvestmentForm = ({ newInvestment, setNewInvestment, onAddInvestment })
   };
 
   return (
-    <div className="relative z-10 container mx-auto max-w-7xl px-4 py-20">
+    <div className="relative z-10 container mx-auto max-w-7xl px-4 py-16 sm:py-20">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className={`backdrop-blur-xl rounded-3xl p-8 transition-colors ${
+        className={`backdrop-blur-xl rounded-3xl p-4 sm:p-6 md:p-8 transition-colors ${
           isDark
             ? 'bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50'
             : 'bg-gradient-to-br from-white/50 to-slate-50/50 border border-slate-200/50'
         }`}
       >
-        <div className="text-center mb-8">
-          <div className="inline-flex px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="inline-flex px-3 sm:px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
             <span className="text-blue-400 font-semibold text-sm">Add Asset</span>
           </div>
-          <h3 className={`text-3xl md:text-4xl font-bold mb-4 transition-colors ${
+          <h3 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-4 transition-colors ${
             isDark ? 'text-white' : 'text-slate-900'
           }`}>
             Expand Your
@@ -38,7 +38,7 @@ const AddInvestmentForm = ({ newInvestment, setNewInvestment, onAddInvestment })
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           <div className="space-y-2">
             <label className={`text-sm font-medium transition-colors ${
               isDark ? 'text-slate-300' : 'text-slate-700'
@@ -50,7 +50,7 @@ const AddInvestmentForm = ({ newInvestment, setNewInvestment, onAddInvestment })
               <select
                 value={newInvestment.type}
                 onChange={(e) => setNewInvestment({ ...newInvestment, type: e.target.value })}
-                className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all text-sm sm:text-base ${
                   isDark
                     ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400'
                     : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500'
@@ -80,7 +80,7 @@ const AddInvestmentForm = ({ newInvestment, setNewInvestment, onAddInvestment })
                 placeholder="Enter amount"
                 value={newInvestment.balance}
                 onChange={(e) => setNewInvestment({ ...newInvestment, balance: e.target.value })}
-                className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all ${
+                className={`w-full pl-10 pr-4 py-3 rounded-xl border transition-all text-sm sm:text-base ${
                   isDark
                     ? 'bg-slate-800/50 border-slate-600 text-white focus:border-emerald-400 placeholder-slate-400'
                     : 'bg-white/50 border-slate-300 text-slate-900 focus:border-emerald-500 placeholder-slate-500'
@@ -112,7 +112,7 @@ const AddInvestmentForm = ({ newInvestment, setNewInvestment, onAddInvestment })
               whileTap={{ scale: 0.98 }}
               onClick={handleAddInvestment}
               disabled={!newInvestment.type || !newInvestment.balance}
-              className={`w-full py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
+              className={`w-full py-3 px-6 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 text-sm sm:text-base ${
                 newInvestment.type && newInvestment.balance
                   ? 'bg-gradient-to-r from-emerald-500 to-blue-500 text-white hover:from-emerald-600 hover:to-blue-600 shadow-lg hover:shadow-xl'
                   : 'bg-slate-600 text-slate-400 cursor-not-allowed'

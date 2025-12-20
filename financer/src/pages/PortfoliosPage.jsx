@@ -126,8 +126,8 @@ const FinancialsPage = () => {
       />
 
       {/* Portfolio Overview Section */}
-      <div className="relative z-10 container mx-auto max-w-7xl px-4 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="relative z-10 container mx-auto max-w-7xl px-4 pb-16 sm:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
           <PortfolioChart
             sortedFinancials={sortedFinancials}
             chartData={chartData}
