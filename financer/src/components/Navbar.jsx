@@ -44,7 +44,11 @@ const Navbar = () => {
               transition={{ duration: 0.2 }}
               className="relative"
             >
-              <div className="p-2 rounded-xl border border-gradient-to-r from-emerald-400 to-blue-500 bg-gradient-to-r from-emerald-400/10 to-blue-500/10 backdrop-blur-sm group-hover:shadow-lg group-hover:shadow-emerald-500/20 transition-shadow duration-300">
+              <div className={`p-2 rounded-xl border backdrop-blur-sm group-hover:shadow-lg group-hover:shadow-emerald-500/20 transition-shadow duration-300 ${
+                isDark 
+                  ? 'border-slate-700/50 bg-gradient-to-r from-emerald-400/10 to-blue-500/10' 
+                  : 'border-slate-200/50 bg-gradient-to-r from-emerald-400/10 to-blue-500/10'
+              }`}>
                 <img 
                   src="/financer.png" 
                   alt="Financer Logo" 
