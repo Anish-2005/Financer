@@ -30,7 +30,7 @@ const ChatbotPage = () => {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/chat", {
+      const response = await fetch("https://financer-4pzl.onrender.com/chat", {
         method: "POST",
         headers: {
           "accept": "application/json",

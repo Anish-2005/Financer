@@ -29,7 +29,7 @@ const StocksPage = () => {
     try {
       if (isLoadMore) setLoadingMore(true);
       
-      const response = await fetch(`http://127.0.0.1:8000/stocks?skip=${currentSkip}&limit=${LIMIT}`);
+      const response = await fetch(`https://financer-4pzl.onrender.com/stocks?skip=${currentSkip}&limit=${LIMIT}`);
       const text = await response.text();
       
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

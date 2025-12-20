@@ -49,7 +49,7 @@ const ComparisonsPage = () => {
       try {
         setLoading(true);
         const skip = (pageNumber - 1) * itemsPerPage;
-        const response = await fetch(`http://127.0.0.1:8000/stocks?skip=${skip}&limit=${itemsPerPage}`);
+        const response = await fetch(`https://financer-4pzl.onrender.com/stocks?skip=${skip}&limit=${itemsPerPage}`);
         const text = await response.text();
 
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);

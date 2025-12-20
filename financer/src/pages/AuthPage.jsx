@@ -25,7 +25,7 @@ const AuthPage = () => {
     }
   }, [navigate]);
 
-  const API_URL = 'http://localhost:8000';
+  const API_URL = 'https://financer-4pzl.onrender.com';
 
   const handleAuth = async (endpoint) => {
     setLoading(true);
