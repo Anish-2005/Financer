@@ -107,7 +107,7 @@ const ComparisonsTable = ({
                   <td className={`px-6 py-4 text-sm transition-colors ${
                     isDark ? 'text-slate-300' : 'text-slate-700'
                   }`}>
-                    {stock.name.length > 30 ? `${stock.name.substring(0, 30)}...` : stock.name}
+                      {stock.name && stock.name.length > 30 ? `${stock.name.substring(0, 30)}...` : (stock.name || stock.symbol)}
                   </td>
                   <td className={`px-6 py-4 text-right font-bold transition-colors ${
                     isDark ? 'text-white' : 'text-slate-900'

@@ -79,7 +79,7 @@ const ComparisonsGrid = ({
                     }`}>{stock.symbol}</h3>
                     <p className={`text-sm transition-colors ${
                       isDark ? 'text-slate-400' : 'text-slate-600'
-                    }`}>{stock.name.length > 20 ? `${stock.name.substring(0, 20)}...` : stock.name}</p>
+                    }`}>{stock.name && stock.name.length > 20 ? `${stock.name.substring(0, 20)}...` : (stock.name || stock.symbol)}</p>
                   </div>
                 </div>
                 <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-sm font-semibold ${

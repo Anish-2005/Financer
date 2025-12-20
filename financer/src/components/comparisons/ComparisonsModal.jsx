@@ -15,7 +15,7 @@ const ComparisonsModal = ({
   onClose,
   getChartData
 }) => {
-  if (!selectedStock) return null;
+  if (!selectedStock || !selectedStock.symbol) return null;
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
@@ -38,7 +38,7 @@ const ComparisonsModal = ({
               <h2 className={`text-3xl font-bold transition-colors ${
                 isDark ? 'text-white' : 'text-slate-900'
               }`}>
-                {selectedStock.name}
+                {selectedStock.name || selectedStock.symbol}
               </h2>
               <p className={`text-lg transition-colors ${
                 isDark ? 'text-slate-400' : 'text-slate-600'

@@ -63,28 +63,34 @@ const ComparisonsPage = () => {
 
         const formattedStocks = result.data
           .filter(stock => stock?.symbol)
-          .map(stock => ({
-            symbol: stock.symbol,
-            name: stock.name || stock.symbol,
-            price: stock.lastPrice ? parseFloat(stock.lastPrice.replace(/,/g, '')) : 0,
-            change: stock.pChange ? parseFloat(stock.pChange) : 0,
-            rawPrice: stock.lastPrice,
-            rawChange: stock.pChange,
-            historical: stock.historical || [],
-            otherDetails: {
-              open: stock.otherDetails?.open,
-              high: stock.otherDetails?.high,
-              low: stock.otherDetails?.low,
-              volume: stock.otherDetails?.volume
-            },
-          }));
+          .map(stock => {
+            // Ensure all required properties are properly typed
+            const price = stock.lastPrice ? parseFloat(stock.lastPrice.replace(/,/g, '')) : 0;
+            const change = stock.pChange ? parseFloat(stock.pChange) : 0;
+
+            return {
+              symbol: String(stock.symbol),
+              name: String(stock.name || stock.symbol),
+              price: isNaN(price) ? 0 : price,
+              change: isNaN(change) ? 0 : change,
+              rawPrice: String(stock.lastPrice || ''),
+              rawChange: String(stock.pChange || ''),
+              historical: Array.isArray(stock.historical) ? stock.historical : [],
+              otherDetails: {
+                open: stock.otherDetails?.open || null,
+                high: stock.otherDetails?.high || null,
+                low: stock.otherDetails?.low || null,
+                volume: stock.otherDetails?.volume || null
+              },
+            };
+          });
 
         setStocks(formattedStocks);
         setTotalCount(result.total_count || 0);
         setError(null);
       } catch (err) {
         setError(err.message);
-        console.error("Stock Fetch Error:", err);
+        console.error("Stock Fetch Error:", err.message || err);
       } finally {
         setLoading(false);
       }
@@ -93,16 +99,23 @@ const ComparisonsPage = () => {
     fetchStocks();
   }, [pageNumber, itemsPerPage]);
 
-  const getChartData = (historical) => ({
-    labels: ['4D', '3D', '2D', '1D', 'Today'],
-    datasets: [{
-      label: 'Price',
-      data: historical,
-      borderColor: '#4ADE80',
-      tension: 0.4,
-      pointRadius: 0,
-    }]
-  });
+  const getChartData = (historical) => {
+    // Ensure historical is an array and contains valid numbers
+    const validData = Array.isArray(historical)
+      ? historical.filter(item => typeof item === 'number' && !isNaN(item))
+      : [];
+
+    return {
+      labels: ['4D', '3D', '2D', '1D', 'Today'],
+      datasets: [{
+        label: 'Price',
+        data: validData.length > 0 ? validData : [0, 0, 0, 0, 0], // Fallback data
+        borderColor: '#4ADE80',
+        tension: 0.4,
+        pointRadius: 0,
+      }]
+    };
+  };
 
   const sortedStocks = [...stocks].sort((a, b) => {
     if (sortBy === "price") {
@@ -193,4 +206,6 @@ const ComparisonsPage = () => {
     </div>
   );
 };
+
+export default ComparisonsPage;
 

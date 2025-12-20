@@ -10,10 +10,13 @@ const ChatbotPage = React.lazy(() => import("./pages/ChatbotPage.jsx"));
 const PortfoliosPage = React.lazy(() => import("./pages/PortfoliosPage.jsx"));
 const FDPage = React.lazy(() => import("./pages/FDPage.jsx"));
 const ExpensesPage = React.lazy(() => import("./pages/ExpensesPage.jsx"));
-const ComparisonsPage = React.lazy(() => import("./pages/ComparisonsPage.jsx"));
+// const ComparisonsPage = React.lazy(() => import("./pages/ComparisonsPage.jsx"));
 const HomePage = React.lazy(() => import("./pages/HomePage.jsx"));
 const AuthPage = React.lazy(() => import('./pages/AuthPage.jsx'));
 const StocksPage = React.lazy(() => import("./pages/StocksPage.jsx"));
+
+// Temporary direct import for debugging
+import ComparisonsPage from "./pages/ComparisonsPage.jsx";
 
 // Loading component for Suspense fallback
 const PageLoader = () => (
