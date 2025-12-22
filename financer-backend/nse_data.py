@@ -13,8 +13,6 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from fake_useragent import UserAgent
-import nselib
-from nselib import capital_market
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -30,7 +28,7 @@ class NSEDataService:
         self.tickers, self.company_names = self._get_all_nse_tickers()
 
     def _get_all_nse_tickers(self) -> tuple[List[str], Dict[str, str]]:
-        """Fetch all NSE equity tickers dynamically"""
+        """Return default NSE equity tickers"""
         default_tickers = [
             "RELIANCE.NS", "TCS.NS", "HDFCBANK.NS", "ICICIBANK.NS", "INFY.NS",
             "HINDUNILVR.NS", "ITC.NS", "SBIN.NS", "BHARTIARTL.NS", "KOTAKBANK.NS",
@@ -45,33 +43,8 @@ class NSEDataService:
         ]
         default_mapping = {t.replace(".NS", ""): t.replace(".NS", "") for t in default_tickers}
         
-        try:
-            logger.info("Fetching full NSE equity list...")
-            df = capital_market.equity_list()
-            
-            # Clean column names (remove leading/trailing spaces)
-            df.columns = df.columns.str.strip()
-            
-            # Filter for Equity series
-            if 'SERIES' in df.columns:
-                eq_df = df[df['SERIES'] == 'EQ']
-                symbols = eq_df['SYMBOL'].tolist()
-                names = eq_df['NAME OF COMPANY'].tolist()
-                
-                # Create mapping
-                mapping = dict(zip(symbols, names))
-                
-                # Append .NS for yfinance
-                ns_tickers = [f"{sym}.NS" for sym in symbols]
-                logger.info(f"Successfully fetched {len(ns_tickers)} tickers from NSE.")
-                return ns_tickers, mapping
-            else:
-                logger.warning("'SERIES' column not found in NSE data. Using default list.")
-                return default_tickers, default_mapping
-                
-        except Exception as e:
-            logger.error(f"Failed to fetch NSE ticker list: {e}. Using default list.")
-            return default_tickers, default_mapping
+        logger.info(f"Using default NSE ticker list with {len(default_tickers)} tickers.")
+        return default_tickers, default_mapping
 
     async def get_stock_data(self, skip: int = 0, limit: int = 20) -> Dict[str, Any]:
         """Get NSE stock market data using yfinance with batching and pagination"""
